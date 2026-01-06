@@ -1,0 +1,101 @@
+
+.form-control {
+    width: 300px; 
+    margin-bottom: 20px;
+}
+
+.form-control .MuiSelect-root {
+    font-size: 14px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 8px;
+    width: 100%;
+}
+
+.form-control .MuiInputLabel-root {
+    background-color: #fff;
+    padding: 5px;
+}
+
+
+.form-control .MuiMenu-paper {
+    background-color: #fff; 
+    color: #333; 
+    border: 1px solid #ccc; 
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+}
+
+.form-control .MuiMenuItem-root {
+    font-size: 14px;
+    padding: 8px 16px;
+}
+
+.form-control .Mui-selected {
+    background-color: #007bff; 
+    color: #fff;
+}
+
+.form-control .Mui-selected:hover {
+    background-color: #0056b3; 
+}
+
+
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.image-grid {
+    text-align: center; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+}
+
+
+.image-grid button {
+    background-color: rgb(28, 28, 151);
+    color: white; 
+    border: none;
+    padding: 10px 20px;
+    width: 100px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease; 
+    align-items: center;
+}
+
+
+.image-grid button:hover {
+    background-color: #e92eae; 
+}
+
+.image-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.image-grid img {
+    margin: 10px;
+    width: 300px;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+h1 {
+    text-align: center;
+}
+
+h2 {
+    margin-top: 20px;
+    text-align: center;
+}

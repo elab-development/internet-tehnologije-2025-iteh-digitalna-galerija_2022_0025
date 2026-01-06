@@ -1,0 +1,23 @@
+.team-member {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.team-member img {
+  width: 200px;
+  height: 250px;
+  border-radius: 40%;
+  margin-left: 60px;
+  margin-right: 60px;
+}
+
+.filters {
+  margin-bottom: 20px;
+}
+
+.filters button {
+ 
+  width: 100%;
+  color: black;
+}

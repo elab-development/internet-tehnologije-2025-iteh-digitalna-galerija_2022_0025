@@ -1,0 +1,139 @@
+/* Stilovi za mobilne uređaje */
+@media (max-width: 768px) {
+  .navbar-brand img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .nav-link {
+    font-size: 14px;
+  }
+
+  .outer {
+    padding: 20px;
+  }
+
+  .inner {
+    width: 100%;
+    padding: 20px;
+  }
+
+  .navbar {
+    flex-direction: column;
+  }
+
+  .navbar-nav {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+/* Stilovi za tablete */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .navbar-brand img {
+    width: 50px;
+    height: 50px;
+  }
+
+  .nav-link {
+    font-size: 16px;
+  }
+
+  .inner {
+    width: 80%;
+  }
+
+  .navbar-nav {
+    flex-direction: row;
+    justify-content: space-around;
+  }
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.footer {
+  font-weight: bold;
+  padding: 10px;
+  margin-top: auto;
+  text-align: center;
+}
+
+.light-mode {
+  background-color: white;
+  color: black;
+  min-height: 100vh;
+}
+
+
+.dark-mode {
+  background-color: rgb(38, 31, 31);
+  color: white;
+  min-height: 100vh;
+}
+
+/* dugme za promenu moda */
+.dark-mode-button {
+  text-decoration: underline;
+  background-color: transparent;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 5px 10px;
+  margin-left: auto;
+  font-size: 16px;
+  width: 200px;
+}
+
+.App {
+  text-align: center;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.navbar {
+  background-color: #C09FDE;
+}
+
+.navbar-nav .nav-item .nav-link {
+  text-decoration: underline;
+}
+
+.navbar-nav .nav-item .nav-link:hover {
+  color: white;
+  background-color: #c14cc9;
+}
+
+.outer {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  text-align: left;
+}
+
+.inner {
+  width: 450px;
+  margin: auto;
+  background: #ffffff;
+  box-shadow: 0px 14px 80px rgb(34 35 58 / 20%);
+  padding: 40px 55px 45px 55px;
+  border-radius: 15px;
+  transition: all 0.3s;
+}
+.navbar-purple {
+  background-color: #C09FDE; 
+}
+
+.navbar {
+  background-color: #C09FDE; 
+}
