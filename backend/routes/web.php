@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CategoryController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -12,4 +14,8 @@ Route::get('/pozdrav', function () {
         'poruka' => 'Zdravo iz Laravel backenda!'
     ]);
 });
+
+
+Route::get('/categories', [CategoryController::class, 'index']);
+Route::post('/categories', [CategoryController::class, 'store']);
 
