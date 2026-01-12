@@ -9,23 +9,23 @@
     ],
     "module": "ESNext",
     "skipLibCheck": true,
-    /* Bundler mode */
+    "composite": true,
+
     "moduleResolution": "node",
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    /* Linting */
+
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    // For Vitest
-    "types": [
-      "vitest/globals"
-    ]
+   
+  
   },
+
   "include": [
     "src"
   ],
@@ -34,4 +34,6 @@
       "path": "./tsconfig.node.json"
     }
   ]
+
+
 }
