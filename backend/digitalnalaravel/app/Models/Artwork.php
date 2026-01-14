@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\User;
 
 class Artwork extends Model
 {
@@ -13,21 +12,22 @@ class Artwork extends Model
     protected $fillable = [
         'naziv',
         'opis',
-        'file_path',
+        'category_id',
         'user_id',
     ];
 
-    public function author()
+    public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
-    }
-    public function user() {
         return $this->belongsTo(User::class);
     }
-    public function images() {
-        return $this->hasMany(Image::class);
+
+    public function images()
+    {
+        return $this->hasMany(Image::class)->orderBy('id', 'asc');
     }
-    public function category() {
+
+    public function category()
+    {
         return $this->belongsTo(Category::class);
     }
 }

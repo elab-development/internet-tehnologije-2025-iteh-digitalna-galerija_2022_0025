@@ -10,15 +10,26 @@ class CreateImagesTable extends Migration
     {
         Schema::create('images', function (Blueprint $table) {
             $table->id();
+
             $table->string('title');
             $table->string('file_path');
+
+            // 🔗 VEZA SA ARTWORKOM (OVDE IDE)
+            $table->foreignId('artwork_id')
+                ->constrained('artworks')
+                ->cascadeOnDelete();
+
+            // kategorija (ako slika ima svoju kategoriju)
             $table->foreignId('category_id')
-                  ->constrained('categories')
-                  ->onDelete('cascade');
+                ->constrained('categories')
+                ->cascadeOnDelete();
+
+            // korisnik (autor slike)
             $table->foreignId('user_id')
-                  ->nullable()
-                  ->constrained('users')
-                  ->nullOnDelete();
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete();
+
             $table->timestamps();
         });
     }

@@ -9,7 +9,10 @@ class CategorySeeder extends Seeder
 {
     public function run(): void
     {
-        Category::create(['name' => 'Umetnicke slike']);
-     
+        $categories = ['Painting', 'Drawing', 'Sculpture', 'Photography', 'Digital Art'];
+
+        foreach ($categories as $name) {
+            Category::create(['name' => $name]);
+        }
     }
 }

@@ -16,7 +16,7 @@ import './App.css';
 import { NavBarPropsI } from "./models/NavBarProps";
 
 const App: React.FC = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('auth_token'));
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const handleAuthChange = () => {
