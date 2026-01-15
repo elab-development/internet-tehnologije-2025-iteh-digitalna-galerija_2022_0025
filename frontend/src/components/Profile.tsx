@@ -8,8 +8,7 @@ type Category = {
 };
 
 type User = {
-  first_name: string;
-  last_name: string;
+  name: string;
 };
 
 function Profile() {
@@ -133,7 +132,8 @@ function Profile() {
     <>
       {/* HEADER bez boje */}
       <div className="profile-header">
-      <h3>Welcome {user?.first_name} {user?.last_name}</h3>
+      <h3>Welcome {user?.name}</h3>
+
       <div className="logout-container">
         <button className="logout-btn" onClick={logout}>
           Logout
