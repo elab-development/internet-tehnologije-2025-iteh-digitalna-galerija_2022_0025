@@ -50,8 +50,9 @@ class ArtworkController extends Controller
             'opis' => 'nullable|string',
             'category_id' => 'required|exists:categories,id',
 
-            // slika
-            'image' => 'nullable|image|mimes:jpg,jpeg,png,gif,webp|max:5120',
+            // slike
+            'images' => 'nullable|array',
+            'images.*' => 'image|mimes:jpg,jpeg,png,gif,webp|max:5120',
         ]);
 
         $user = $request->user();
@@ -64,27 +65,27 @@ class ArtworkController extends Controller
             'user_id' => $user->id,
         ]);
 
-        // 2️⃣ AKO POSTOJI SLIKA → UPLOAD + VEZA
-        if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('images', 'public');
-            $file = $request->file('file');
+        // 2️⃣ više slika
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $file) {
+                $path = $file->store('images', 'public');
 
-            Image::create([
-                'title' => $request->title ?? $file->getClientOriginalName(),
-                'file_path' => $path,
-                'artwork_id' => $artwork->id,
-                'category_id' => $request->category_id,
-                'user_id' => $user->id,
-            ]);
-        
+                Image::create([
+                    'title' => $file->getClientOriginalName(),
+                    'file_path' => $path,
+                    'artwork_id' => $artwork->id,
+                    'category_id' => $request->category_id,
+                    'user_id' => $user->id,
+                ]);
+            }
         }
 
-    // 3️⃣ VRATI ARTWORK SA SLIKAMA
-    return response()->json([
-        'message' => 'Artwork created with image',
-        'artwork' => $artwork->load('images'),
-    ], 201);
-}
+        // 3️⃣ VRATI ARTWORK SA SLIKAMA
+        return response()->json([
+            'message' => 'Artwork created with image',
+            'artwork' => $artwork->load('images'),
+        ], 201);
+    }
 
     // PUT/PATCH /api/artworks/{id}
     public function update(Request $request, Artwork $artwork)
