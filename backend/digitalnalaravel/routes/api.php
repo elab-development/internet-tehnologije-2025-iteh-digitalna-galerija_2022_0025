@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ArtworkController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CategoryController;
 
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
@@ -24,5 +25,9 @@ Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanct
     Route::get('images', [ImageController::class, 'index']);
     Route::delete('images/{id}', [ImageController::class, 'destroy']);
     Route::get('images/external', [ImageController::class, 'fetchExternalImages']);
+
+    Route::get('/categories', [CategoryController::class, 'index']);
+
+
 });
 
