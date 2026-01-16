@@ -1,120 +1,130 @@
-import React, { useState, useEffect } from 'react';
-import './Gallery.css';
-import Pagination from '@mui/material/Pagination';
-import { MenuItem, Select, FormControl, InputLabel, SelectChangeEvent } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import "./Gallery.css";
+import Pagination from "@mui/material/Pagination";
 
-interface Photo {
-    id: number;
-    photographer: string;
-    src: {
-        medium: string;
-    };
-}
+type Category = {
+  id: number;
+  name: string;
+};
 
+type Image = {
+  id: number;
+  file_path: string;
+};
 
+type Artwork = {
+  id: number;
+  naziv: string;
+  opis: string;
+  category?: Category;
+  images?: Image[];
+};
 
 const Gallery: React.FC = () => {
-    const [images, setImages] = useState<Photo[]>([]);
-    const [likedImages, setLikedImages] = useState<number[]>([]);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [selectedPhotographer, setSelectedPhotographer] = useState<string>('');
-    const navigate = useNavigate();
+  const [artworks, setArtworks] = useState<Artwork[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [categories, setCategories] = useState<Category[]>([]);
 
+  const perPage = 8; // fiksno 8 po stranici
 
-    useEffect(() => {
-        document.title = 'Gallery';
-    }, []);
+  useEffect(() => {
+    document.title = "Gallery";
+    fetchCategories();
+    fetchArtworks();
+  }, []);
 
-    const handlePageChange = (value: number) => {
-        setCurrentPage(value);
-    };
+  const fetchCategories = async () => {
+    const token = localStorage.getItem("auth_token");
+    if (!token) return;
 
-    useEffect(() => {
-        const fetchImages = async () => {
-            try {
-                const response = await fetch(`https://api.pexels.com/v1/search?query=artpiece&per_page=8&page=${currentPage}`, {
-                    headers: {
-                        Authorization: 'f8eLZrQGnyHWu6wQ1DS8CG6IUX9QG6DTm3tgfXjFAnHKmt9U8xkKuZYB'
-                    }
-                });
-                if (!response.ok) {
-                    throw new Error('Failed to fetch images');
-                }
-                const data = await response.json();
-                setImages(data.photos);
-            } catch (error) {
-                console.error(error);
-            }
-        };
+    const res = await fetch("http://localhost:8000/api/categories", {
+      headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
+    });
+    const data = await res.json();
+    setCategories(data);
+  };
 
-        fetchImages();
-    }, [currentPage]);
+  const fetchArtworks = async () => {
+    const token = localStorage.getItem("auth_token");
+    if (!token) return;
 
-    const handleLikeClick = (id: number) => {
-        if (likedImages.includes(id)) {
-            setLikedImages(likedImages.filter(imageId => imageId !== id));
-        } else {
-            setLikedImages([...likedImages, id]);
-        }
-    };
+    const res = await fetch("http://localhost:8000/api/artworks", {
+      headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
+    });
+    const data = await res.json();
+    setArtworks(data.data || []);
+  };
 
-    const handlePhotographerChange = (event: SelectChangeEvent<string>) => {
-        setSelectedPhotographer(event.target.value);
-    };
+  const handlePageChange = (_: any, value: number) => {
+    setCurrentPage(value);
+  };
 
-    const uniquePhotographers = Array.from(new Set(images.map(image => image.photographer)));
-    const filteredImages = selectedPhotographer
-        ? images.filter(image => image.photographer === selectedPhotographer)
-        : images;
+  // filtrirani artwork-i
+  const filteredArtworks = selectedCategory
+    ? artworks.filter((art) => art.category?.name === selectedCategory)
+    : artworks;
 
-    const handlePhotographerClick = (photographer: string) => {
-        navigate(`/photographer/${photographer}`);
-    };
+  // artwork-i za trenutnu stranicu
+  const startIndex = (currentPage - 1) * perPage;
+  const endIndex = startIndex + perPage;
+  const artworksToShow = filteredArtworks.slice(startIndex, endIndex);
 
-    return (
-        <div>
-            <h1>Gallery</h1>
-            <FormControl variant="outlined" className="form-control">
-                <InputLabel id="photographer-label">Photographer</InputLabel>
-                <Select
-                    labelId="photographer-label"
-                    value={selectedPhotographer}
-                    onChange={handlePhotographerChange}
-                    label="Photographer"
-                >
-                    <MenuItem value="">
-                        <em>All</em>
-                    </MenuItem>
-                    {uniquePhotographers.map((photographer, index) => (
-                        <MenuItem key={index} value={photographer}>
-                            {photographer}
-                        </MenuItem>
-                    ))}
-                </Select>
-            </FormControl>
-            <div className="image-grid">
-                {filteredImages.map((image, index) => (
-                    <div key={index}>
-                        <img src={image.src.medium} alt={image.photographer} />
-                        <p onClick={() => handlePhotographerClick(image.photographer)} style={{ cursor: 'pointer', color: 'blue' }}>
-                            {image.photographer}
-                        </p>
-                        <button onClick={() => handleLikeClick(image.id)}>
-                            {likedImages.includes(image.id) ? 'Unlike' : 'Like'}
-                        </button>
-                    </div>
-                ))}
-            </div>
-            <div className="pagination">
-                <Pagination 
-                    count={4} 
-                    page={currentPage}
-                    onChange={(_, value) => handlePageChange(value)}
+  // broj stranica fiksno prema ukupnom broju filtriranih artworka
+  const pageCount = Math.ceil(filteredArtworks.length / perPage);
+
+  return (
+    <div>
+      <h1>Gallery</h1>
+
+      {/* FILTER PO KATEGORIJI */}
+      <div className="filter-container">
+        <select
+          value={selectedCategory}
+          onChange={(e) => setSelectedCategory(e.target.value)}
+        >
+          <option value="">All categories</option>
+          {categories.map((cat) => (
+            <option key={cat.id} value={cat.name}>
+              {cat.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* GRID ARTWORKA */}
+      <div className="image-grid">
+        {artworksToShow.map((art) => (
+          <div key={art.id} className="artwork-card">
+            <h3>{art.naziv}</h3>
+            <p className="category">{art.category?.name}</p>
+            <p className="description">{art.opis}</p>
+            <div className="artwork-images">
+              {art.images?.map((img) => (
+                <img
+                  key={img.id}
+                  src={`http://localhost:8000/storage/${img.file_path}`}
+                  alt={art.naziv}
                 />
+              ))}
             </div>
+          </div>
+        ))}
+      </div>
+
+      {/* PAGINACIJA */}
+      {pageCount > 1 && (
+        <div className="pagination">
+          <Pagination
+            count={pageCount}
+            page={currentPage}
+            onChange={handlePageChange}
+            color="primary"
+          />
         </div>
-    );
+      )}
+    </div>
+  );
 };
 
 export default Gallery;
