@@ -153,3 +153,22 @@ body {
   border-radius: 12px;
 }
 
+/* =========================
+   DARK MODE ZA PROFILE
+========================= */
+
+
+
+
+body.dark-mode .artwork-card {
+  background-color: rgb(38, 31, 31);
+  color: white;
+  border: 1px solid #555;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+}
+
+
+
+
+
+
