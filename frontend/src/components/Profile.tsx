@@ -1,10 +1,24 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./Profile.css"; // ✅ import CSS
+import "./Profile.css";
 
 type Category = {
   id: number;
   name: string;
+};
+
+type Image = {
+  id: number;
+  title: string;
+  file_path: string;
+};
+
+type Artwork = {
+  id: number;
+  naziv: string;
+  opis: string;
+  category?: Category;
+  images?: Image[];
 };
 
 type User = {
@@ -22,6 +36,8 @@ function Profile() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [submitMsg, setSubmitMsg] = useState("");
   const [user, setUser] = useState<User | null>(null);
+  const [artworks, setArtworks] = useState<Artwork[]>([]);
+  const [selectedArtwork, setSelectedArtwork] = useState<Artwork | null>(null);
 
   useEffect(() => {
     document.title = "Profile";
@@ -34,6 +50,7 @@ function Profile() {
 
     fetchCategories();
     fetchUser();
+    fetchArtworks();
   }, []);
 
   useEffect(() => {
@@ -45,42 +62,47 @@ function Profile() {
 
   const fetchCategories = async () => {
     const token = localStorage.getItem("auth_token");
-
     const res = await fetch("http://localhost:8000/api/categories", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: "application/json",
-      },
+      headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
     });
-
     const data = await res.json();
     setCategories(data);
   };
 
   const fetchUser = async () => {
     const token = localStorage.getItem("auth_token");
-
     const res = await fetch("http://localhost:8000/api/user", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: "application/json",
-      },
+      headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
     });
-
     const data = await res.json();
     setUser(data);
   };
 
+  const fetchArtworks = async () => {
+    const token = localStorage.getItem("auth_token");
+    const res = await fetch("http://localhost:8000/api/artworks", {
+      headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
+    });
+    const data = await res.json();
+    setArtworks(data.data); // Laravel paginate
+  };
+
+  const fetchArtworkById = async (id: number) => {
+    const token = localStorage.getItem("auth_token");
+    const res = await fetch(`http://localhost:8000/api/artworks/${id}`, {
+      headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
+    });
+    if (!res.ok) return;
+    const data = await res.json();
+    setSelectedArtwork(data);
+  };
+
   const logout = async () => {
     const token = localStorage.getItem("auth_token");
-
     await fetch("http://localhost:8000/api/logout", {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: { Authorization: `Bearer ${token}` },
     });
-
     localStorage.removeItem("auth_token");
     window.dispatchEvent(new Event("authChange"));
     navigate("/login");
@@ -93,7 +115,6 @@ function Profile() {
 
   const createArtwork = async (e: React.FormEvent) => {
     e.preventDefault();
-
     const token = localStorage.getItem("auth_token");
     if (!token) return;
 
@@ -101,16 +122,11 @@ function Profile() {
     formData.append("naziv", naziv);
     formData.append("opis", opis);
     formData.append("category_id", String(categoryId));
-
-    images.forEach((file) => {
-      formData.append("images[]", file);
-    });
+    images.forEach((file) => formData.append("images[]", file));
 
     const res = await fetch("http://localhost:8000/api/artworks", {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: { Authorization: `Bearer ${token}` },
       body: formData,
     });
 
@@ -120,78 +136,105 @@ function Profile() {
     }
 
     setSubmitMsg("Artwork successfully created 🎉");
-
     setNaziv("");
     setOpis("");
     setCategoryId("");
     setImages([]);
     setShowForm(false);
+    fetchArtworks();
   };
 
   return (
-    <>
-      {/* HEADER bez boje */}
-      <div className="profile-header">
-      <h3>Welcome {user?.name}</h3>
-
-      <div className="logout-container">
-        <button className="logout-btn" onClick={logout}>
-          Logout
-        </button>
-      </div>
+  <>
+    {/* HEADER */}
+    <div className="profile-header">
+      <h2>Welcome {user?.name}</h2>
+      <button className="logout-btn" onClick={logout}>
+        Logout
+      </button>
     </div>
 
-      <div className="container">
-        {submitMsg && <div className="submit-msg">{submitMsg}</div>}
+    {/* CREATE ARTWORK */}
+    <div className="container">
+      {submitMsg && <div className="submit-msg">{submitMsg}</div>}
 
-        <button className="create-btn" onClick={() => setShowForm(!showForm)}>
-          {showForm ? "Cancel" : "Create artwork"}
-        </button>
+      <button className="create-btn" onClick={() => setShowForm(!showForm)}>
+        {showForm ? "Cancel" : "Create artwork"}
+      </button>
 
-        {showForm && (
-          <form onSubmit={createArtwork} className="artwork-form">
-            <h3>Create new artwork</h3>
+      {showForm && (
+        <form onSubmit={createArtwork} className="artwork-form">
+          <input
+            type="text"
+            placeholder="Artwork name"
+            value={naziv}
+            onChange={(e) => setNaziv(e.target.value)}
+            required
+          />
 
-            <input
-              type="text"
-              placeholder="Artwork name"
-              value={naziv}
-              onChange={(e) => setNaziv(e.target.value)}
-              required
-            />
+          <textarea
+            placeholder="Description"
+            value={opis}
+            onChange={(e) => setOpis(e.target.value)}
+          />
 
-            <textarea
-              placeholder="Description"
-              value={opis}
-              onChange={(e) => setOpis(e.target.value)}
-            />
+          <select
+            value={categoryId}
+            onChange={(e) => setCategoryId(Number(e.target.value))}
+            required
+          >
+            <option value="">Select category</option>
+            {categories.map((cat) => (
+              <option key={cat.id} value={cat.id}>
+                {cat.name}
+              </option>
+            ))}
+          </select>
 
-            <select
-              value={categoryId}
-              onChange={(e) => setCategoryId(Number(e.target.value))}
-              required
-            >
-              <option value="">Select category</option>
-              {categories.map((cat) => (
-                <option key={cat.id} value={cat.id}>{cat.name}</option>
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={(e) => handleImagesChange(e.target.files)}
+          />
+
+          <button type="submit" className="save-btn">
+            Save artwork
+          </button>
+        </form>
+      )}
+    </div>
+      <div>
+    {/* YOUR ARTWORKS */}
+    <section className="your-artworks">
+      <h2>Your artworks</h2>
+
+      {artworks.length === 0 && <p>No artworks yet.</p>}
+
+      <div className="artwork-grid">
+        {artworks.map((art) => (
+          <div key={art.id} className="artwork-card">
+            <h3>{art.naziv}</h3>
+            <p className="category">{art.category?.name}</p>
+
+            <div className="artwork-images">
+              {art.images?.map((img) => (
+                <img
+                  key={img.id}
+                  src={`http://localhost:8000/storage/${img.file_path}`}
+                  alt={art.naziv}
+                />
               ))}
-            </select>
-
-            <input
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={(e) => handleImagesChange(e.target.files)}
-            />
-
-            {images.length > 0 && <small>{images.length} image(s) selected</small>}
-
-            <button type="submit" className="save-btn">Save artwork</button>
-          </form>
-        )}
+            </div>
+          </div>
+        ))}
       </div>
-    </>
-  );
+    </section>
+    </div>
+  </>
+  
+);
+
 }
 
 export default Profile;

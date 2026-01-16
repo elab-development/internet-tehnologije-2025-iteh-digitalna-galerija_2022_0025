@@ -28,7 +28,7 @@ Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanct
 
     Route::get('/categories', [CategoryController::class, 'index']);
 
-    Route::middleware('auth:sanctum')->get('/user', [UserController::class, 'getUser']);
+    Route::get('/user', [UserController::class, 'getUser']);
 
 });
 

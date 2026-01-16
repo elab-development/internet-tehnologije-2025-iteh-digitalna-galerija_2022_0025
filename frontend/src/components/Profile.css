@@ -1,77 +1,84 @@
-/* CONTAINER FOR FORM */
-.container {
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 20px;
-    border-radius: 5px;
-    background-color: #C09FDE; /* svetlo-ljubičasta */
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1;
-    box-sizing: border-box;
+/* =========================
+   GLOBAL
+========================= */
+* {
+  box-sizing: border-box;
 }
 
-/* HEADER */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #ffffff;
+}
+
+/* =========================
+   HEADER
+========================= */
 .profile-header {
   display: flex;
-  flex-direction: column; /* vertikalno */
-  align-items: center;   /* centrirano */
-  padding: 16px 24px;
-  gap: 8px; /* razmak između welcome i logout */
+  flex-direction: column;
+  align-items: center;
+  margin-top: 40px;
+  gap: 10px;
+  
 }
 
-/* Logout dugme sada isto kao ostala dugmad */
 .logout-btn {
-  width: 100%;       /* kao ostala dugmad */
-  max-width: 200px;  /* ne preširoko */
+  width: 200px;
   padding: 10px;
   border: none;
-  border-radius: 4px;
-  background-color: #007bff; /* plava */
+  border-radius: 6px;
+  background-color: #007bff;
   color: white;
   cursor: pointer;
-  transition: background 0.2s;
 }
 
 .logout-btn:hover {
-  background-color: #0056b3; /* tamnija plava */
+  background-color: #0056b3;
 }
 
+/* =========================
+   FORM CONTAINER
+========================= */
+.container {
+   max-width: 400px;
+  
+  
+  border-radius: 8px;
+  background-color: #C09FDE;
+}
 
-/* SUCCESS MESSAGE */
+/* MESSAGE */
 .submit-msg {
-    margin-bottom: 16px;
-    color: green;
-    text-align: center;
+  margin-bottom: 16px;
+  color: blue;
+  text-align: center;
 }
 
-/* CREATE / SAVE BUTTONS */
+/* BUTTONS */
 .create-btn,
 .save-btn {
-    width: 100%;
-    padding: 10px;
-    border: none;
-    border-radius: 4px;
-    background-color: #007bff; /* plava */
-    color: #fff;
-    cursor: pointer;
-    transition: background 0.2s;
-    margin-top: 10px;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+  margin-top: 10px;
 }
 
 .create-btn:hover,
 .save-btn:hover {
-    background-color: #0056b3; /* tamnija plava */
+  background-color: #0056b3;
 }
 
-/* FORM FIELDS */
+/* FORM */
 .artwork-form {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    background-color: #C09FDE; /* svetlo-ljubičasta pozadina */
+    background-color: #C09FDE;
     padding: 16px;
     border-radius: 5px;
     box-sizing: border-box;
@@ -92,15 +99,57 @@
     color: #555;
 }
 
-/* MEDIA QUERY za mobilne */
-@media (max-width: 768px) {
-    .container {
-        max-width: 90%;
-        padding: 10px;
-        position: relative;
-        top: auto;
-        left: auto;
-        transform: none;
-        margin-top: 20px;
-    }
+
+/* =========================
+   YOUR ARTWORKS SECTION
+========================= */
+.your-artworks {
+  padding: 50px 30px;
+  margin-top: 200px;
 }
+
+.your-artworks h2 {
+  margin-bottom: 20px;
+}
+
+/* GRID ZA ARTWORK */
+.artwork-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+/* JEDAN ARTWORK */
+.artwork-card {
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.artwork-card h3 {
+  margin-bottom: 4px;
+}
+
+.artwork-card .category {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 12px;
+}
+
+/* SLIKE UNUTAR ARTWORK-A */
+.artwork-images {
+    
+  display: grid;
+  
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.artwork-images img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
