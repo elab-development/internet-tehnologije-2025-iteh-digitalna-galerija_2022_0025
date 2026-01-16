@@ -103,7 +103,8 @@ const Gallery: React.FC = () => {
             </h3>
 
             <p className="category">{art.category?.name}</p>
-
+            
+            <p className="description">{art.opis}</p>
             {/* Slike */}
             <div className="artwork-images">
               {art.images?.map((img) => (
@@ -115,8 +116,7 @@ const Gallery: React.FC = () => {
               ))}
             </div>
 
-            {/* Opis ispod slika */}
-            <p className="description">{art.opis}</p>
+            
           </div>
         ))}
       </div>
