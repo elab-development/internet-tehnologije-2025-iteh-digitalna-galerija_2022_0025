@@ -11,6 +11,7 @@ Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 Route::get('artworks', [ArtworkController::class, 'index']);
+Route::get('/categories', [CategoryController::class, 'index']);
 
 Route::middleware('auth:sanctum')->group(function () {
 
@@ -27,7 +28,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('images/{id}', [ImageController::class, 'destroy']);
     Route::get('images/external', [ImageController::class, 'fetchExternalImages']);
 
-    Route::get('/categories', [CategoryController::class, 'index']);
+    
     Route::get('/user', [UserController::class, 'getUser']);
 });
 

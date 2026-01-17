@@ -12,7 +12,7 @@ type Artwork = {
   opis: string;
   category?: Category;
   images?: Image[];
-  user?: User; // umetnik
+ 
 };
 
 const Gallery: React.FC = () => {
@@ -31,16 +31,13 @@ const Gallery: React.FC = () => {
   }, []);
 
   // Fetch categories
-  const fetchCategories = async () => {
-    const token = localStorage.getItem("auth_token");
-    if (!token) return;
-
-    const res = await fetch("http://localhost:8000/api/categories", {
-      headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
-    });
+    const fetchCategories = async () => {
+    const res = await fetch("http://localhost:8000/api/categories");
+    if (!res.ok) return;
     const data = await res.json();
-    setCategories(data);
-  };
+    setCategories(data); // data je lista kategorija
+    };
+
 
   // Fetch artworks (javno)
     const fetchArtworks = async () => {
@@ -96,7 +93,7 @@ const Gallery: React.FC = () => {
           <div key={art.id} className="artwork-card">
             {/* Naziv dela – Ime umetnika */}
             <h3>
-              {art.naziv} {art.user ? `– ${art.user.name}` : ""}
+              {art.naziv} 
             </h3>
 
             <p className="category">{art.category?.name}</p>
