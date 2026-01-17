@@ -1,9 +1,10 @@
 /* =========================
-   GLOBAL STYLES
+   GLOBAL
 ========================= */
 .profile-page {
   background-color: #f8f9fa;
   min-height: 100vh;
+  padding-bottom: 60px;
 }
 
 /* =========================
@@ -15,20 +16,24 @@
   align-items: center;
   padding: 40px 20px;
   background: white;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+}
+
+.profile-header h1 {
+  margin: 0;
 }
 
 .logout-btn {
-  margin-top: 15px;
-  padding: 8px 25px;
+    max-width: 200px;
+  margin-top: 16px;
+  padding: 8px 26px;
   border: 2px solid #007bff;
   background: transparent;
   color: #007bff;
-  border-radius: 20px;
+  border-radius: 999px;
   font-weight: bold;
   cursor: pointer;
   transition: 0.3s;
-  max-width: 200px;
 }
 
 .logout-btn:hover {
@@ -37,54 +42,59 @@
 }
 
 /* =========================
-   ACTION SECTION (Dugme Create)
+   ACTION SECTION
 ========================= */
 .action-section {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 40px 0;
+  justify-content: center;
+  padding: 40px 0 20px;
 }
 
 .create-btn {
+    max-width: 200px;
   background-color: #1c1c97;
   color: white;
   border: none;
-  padding: 15px 40px;
-  font-size: 18px;
+  padding: 14px 36px;
+  font-size: 17px;
   font-weight: bold;
-  border-radius: 40px;
+  border-radius: 999px;
   cursor: pointer;
-  box-shadow: 0 6px 20px rgba(28, 28, 151, 0.3);
-  transition: all 0.3s ease;
-  max-width: 200px;
+  box-shadow: 0 6px 20px rgba(28,28,151,0.3);
+  transition: 0.3s ease;
+  width: auto;
+  min-width: 260px;
 }
 
 .create-btn:hover {
   background-color: #e92eae;
-  transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(233, 46, 174, 0.4);
-}
-
-.submit-msg {
-  background-color: #d1e7dd;
-  color: #0f5132;
-  padding: 12px 25px;
-  border-radius: 10px;
-  margin-bottom: 20px;
-  font-weight: bold;
+  transform: translateY(-2px);
 }
 
 /* =========================
-   MODAL STYLES (Key fix)
+   SUCCESS MESSAGE
+========================= */
+.submit-msg {
+  max-width: 600px;
+  margin: 0 auto 20px;
+  background: #d1e7dd;
+  color: #0f5132;
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* =========================
+   MODAL
 ========================= */
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0,0,0,0.7);
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   z-index: 9999;
   backdrop-filter: blur(6px);
 }
@@ -92,86 +102,81 @@
 .modal-content {
   background: white;
   width: 95%;
-  max-width: 550px;
+  max-width: 560px;
   max-height: 90vh;
   overflow-y: auto;
-  border-radius: 25px;
-  padding: 35px;
+  border-radius: 26px;
+  padding: 32px;
   box-shadow: 0 25px 50px rgba(0,0,0,0.4);
-  position: relative;
 }
 
 .artwork-form h3 {
   margin-top: 0;
-  margin-bottom: 25px;
+  margin-bottom: 22px;
   text-align: center;
   color: #1c1c97;
-  font-size: 24px;
 }
 
+/* =========================
+   FORM
+========================= */
 .input-group {
-  margin-bottom: 15px;
+  margin-bottom: 14px;
 }
 
-.artwork-form input, 
-.artwork-form textarea, 
+.artwork-form input,
+.artwork-form textarea,
 .artwork-form select {
   width: 100%;
   padding: 14px;
+  border-radius: 14px;
   border: 1px solid #ddd;
-  border-radius: 12px;
-  background: #fdfdfd;
   font-size: 15px;
 }
 
 /* =========================
-   IMAGE GRID IN MODAL
+   IMAGE EDIT GRID (MODAL)
 ========================= */
 .edit-images-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
   gap: 12px;
-  margin-top: 10px;
+  margin-top: 12px;
+  padding: 14px;
+  border-radius: 18px;
   background: #f1f3f5;
-  padding: 15px;
-  border-radius: 15px;
 }
 
 .edit-image-item {
   position: relative;
-  width: 75px;
-  height: 75px;
+  aspect-ratio: 1 / 1;
 }
 
 .edit-image-item img {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  border-radius: 10px;
-  background: transparent; /* Bez pozadine u modalu */
+  border-radius: 14px;
 }
 
 .marked-delete img {
+  opacity: 0.25;
   filter: grayscale(1);
-  opacity: 0.2;
   border: 2px solid #ff4d4d;
 }
 
 .img-action-btn {
   position: absolute;
-  top: -8px;
-  right: -8px;
+  top: -6px;
+  right: -6px;
+  width: 22px;
+  height: 22px;
   background: #ff4d4d;
-  color: white;
   border: none;
   border-radius: 50%;
-  width: 24px;
-  height: 24px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  color: white;
   font-size: 12px;
+  cursor: pointer;
 }
 
 .marked-delete .img-action-btn {
@@ -179,30 +184,29 @@
 }
 
 .add-image-placeholder {
-  width: 75px;
-  height: 75px;
+  aspect-ratio: 1 / 1;
   border: 2px dashed #adb5bd;
-  border-radius: 10px;
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 30px;
-  color: #adb5bd;
+  font-size: 28px;
   cursor: pointer;
+  color: #adb5bd;
 }
 
 /* =========================
-   ARTWORK CARDS (Grid)
+   ARTWORK LIST
 ========================= */
 .your-artworks {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 40px 20px;
+  padding: 30px 20px;
 }
 
 .your-artworks h2 {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 36px;
 }
 
 .artwork-grid {
@@ -211,67 +215,80 @@
   gap: 30px;
 }
 
+/* =========================
+   ARTWORK CARD
+========================= */
 .artwork-card {
   background: white;
-  border-radius: 20px;
-  padding: 25px;
+  border-radius: 24px;
+  padding: 24px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.06);
-  transition: transform 0.3s ease;
   display: flex;
   flex-direction: column;
+  transition: 0.3s ease;
 }
 
-.artwork-card:hover { transform: translateY(-8px); }
+.artwork-card:hover {
+  transform: translateY(-6px);
+}
 
 .category-tag {
-  display: inline-block;
+  align-self: center;
   background: #f1f3f5;
   color: #1c1c97;
-  padding: 5px 12px;
-  border-radius: 15px;
+  padding: 6px 14px;
+  border-radius: 999px;
   font-size: 12px;
   font-weight: bold;
-  margin-bottom: 15px;
-  align-self: center;
+  margin-bottom: 14px;
 }
 
 .description {
-  margin-bottom: 15px;
-  
+  margin-bottom: 14px;
+  text-align: center;
 }
 
-/* --- GLAVNI FIX ZA SLIKE --- */
+/* =========================
+   IMAGE PREVIEW (KEY PART)
+========================= */
 .artwork-images-preview {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
+  gap: 12px;
   margin-bottom: 20px;
-  height: 220px; /* Možeš podesiti visinu po želji */
-  width: 100%;
 }
 
 .artwork-images-preview img {
   width: 100%;
-  height: 100%;
-  object-fit: contain;      /* Slika je cela */
-  border-radius: 15px;      /* Zaobljenje */
-  background-color: transparent; /* NEMA POZADINE */
-  display: block;
-  /* Slaba ivica samo da "ocrta" zaobljenje ako je slika bela */
-  border: 1px solid rgba(0,0,0,0.05); 
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+  border-radius: 18px;
+  padding: 6px;
+  background: transparent;
+  border: 1px solid rgba(0,0,0,0.08);
 }
 
+
+
+
+.artwork-images-preview img:hover {
+  transform: scale(1.03);
+}
+
+/* =========================
+   CARD ACTIONS
+========================= */
 .update-btn {
+  margin-top: auto;
   width: 100%;
   background: transparent;
   border: 2px solid #1c1c97;
   color: #1c1c97;
-  padding: 10px;
-  border-radius: 12px;
+  padding: 12px;
+  border-radius: 14px;
   font-weight: bold;
   cursor: pointer;
   transition: 0.3s;
-  margin-top: auto;
 }
 
 .update-btn:hover {
@@ -281,17 +298,17 @@
 
 .form-actions {
   display: flex;
-  gap: 10px;
+  gap: 12px;
   margin-top: 20px;
 }
 
 .cancel-btn {
+  flex: 1;
   background: #333;
   color: #eee;
-  flex: 1;
   border: none;
   padding: 14px;
-  border-radius: 12px;
+  border-radius: 14px;
   cursor: pointer;
 }
 
@@ -300,25 +317,23 @@
   background: #1c1c97;
   color: white;
   border: none;
-  border-radius: 12px;
+  border-radius: 14px;
   font-weight: bold;
   cursor: pointer;
 }
 
 /* =========================
-   DARK MODE ZA PROFILE
+   DARK MODE
 ========================= */
-
 body.dark-mode .profile-page {
-  background-color: #121212;
+  background: #121212;
   color: #e0e0e0;
 }
 
 body.dark-mode .profile-header,
 body.dark-mode .artwork-card,
 body.dark-mode .modal-content {
-  background-color: #1e1e1e;
-  color: #ffffff;
+  background: #1e1e1e;
 }
 
 body.dark-mode .category-tag {
@@ -326,29 +341,10 @@ body.dark-mode .category-tag {
   color: #007bff;
 }
 
-body.dark-mode .artwork-form input,
-body.dark-mode .artwork-form textarea,
-body.dark-mode .artwork-form select {
-  background-color: #2d2d2d;
-  border-color: #444;
-  color: #ffffff;
-}
-
 body.dark-mode .artwork-images-preview img {
-  background-color: transparent; /* NEMA POZADINE NI U DARK MODU */
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255,255,255,0.15);
 }
 
 body.dark-mode .edit-images-grid {
   background: #252525;
-}
-
-body.dark-mode .cancel-btn {
-  background: #333;
-  color: #eee;
-}
-
-body.dark-mode .update-btn {
-  border-color: #007bff;
-  color: white;
 }
