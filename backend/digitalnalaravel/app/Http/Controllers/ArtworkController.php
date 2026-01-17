@@ -13,34 +13,48 @@ class ArtworkController extends Controller
 {
     // GET /api/artworks
     public function index(Request $request)
-    {
-        $perPage = (int) $request->query('per_page', 10);
-        $perPage = max(1, min(100, $perPage));
+{
+    $perPage = (int) $request->query('per_page', 10);
+    $perPage = max(1, min(100, $perPage));
 
-        $query = Artwork::where('user_id', $request->user()->id)
-            ->with(['category', 'images']); // preload category i slike
+    $query = Artwork::with(['category', 'images']);
 
-        if ($request->filled('naziv')) {
-            $query->where('naziv', 'like', '%' . $request->naziv . '%');
-        }
-
-        $artworks = $query->paginate($perPage);
-
-        return response()->json($artworks);
+    // ako je ulogovan → vidi samo svoje
+    if ($request->user()) {
+        $query->where('user_id', $request->user()->id);
     }
+
+    // ako NIJE ulogovan → vidi sve (ili samo public)
+    // ili možeš npr.:
+    // $query->where('is_public', true);
+
+    if ($request->filled('naziv')) {
+        $query->where('naziv', 'like', '%' . $request->naziv . '%');
+    }
+
+    return response()->json(
+        $query->paginate($perPage)
+    );
+}
+
 
     // GET /api/artworks/{id}
-    public function show(Request $request, Artwork $artwork)
-    {
-        // samo vlasnik vidi artwork
-        if ($artwork->user_id !== $request->user()->id) {
-            return response()->json(['error' => 'Forbidden'], 403);
-        }
-
-        return response()->json(
-            $artwork->load(['category', 'images'])
-        );
+    // GET /api/artworks/{id}  -> id korisnika
+public function show(Request $request, $id)
+{
+    // samo vlasnik može videti svoje radove
+    if ($request->user()->id != $id) {
+        return response()->json(['error' => 'Forbidden'], 403);
     }
+
+    // dohvat svih artwork-a za tog korisnika
+    $artworks = Artwork::with(['category', 'images'])
+        ->where('user_id', $id)
+        ->get();
+
+    return response()->json($artworks);
+}
+
 
     // POST /api/artworks
     public function store(Request $request)

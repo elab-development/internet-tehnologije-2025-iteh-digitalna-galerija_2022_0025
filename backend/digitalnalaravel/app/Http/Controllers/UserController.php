@@ -8,9 +8,7 @@ class UserController extends Controller
 {
     public function getUser(Request $request)
     {
-        return response()->json([
-            'name' => $request->user()->name,
-            
-        ]);
+        // vraća ceo ulogovani User model kao JSON
+        return response()->json($request->user());
     }
 }
