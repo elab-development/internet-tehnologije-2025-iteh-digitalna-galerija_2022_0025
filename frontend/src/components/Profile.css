@@ -170,7 +170,62 @@ body.dark-mode .artwork-card {
 }
 
 
+.manage-images p {
+    font-size: 13px;
+    margin-bottom: 8px;
+    color: #333;
+}
 
+.edit-images-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+    background: rgba(255, 255, 255, 0.3);
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.edit-image-item {
+    position: relative;
+    width: 60px;
+    height: 60px;
+}
+
+.edit-image-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #fff;
+}
+
+/* Stil kada je slika označena za brisanje */
+.edit-image-item.to-delete img {
+    filter: grayscale(1) opacity(0.3);
+    border: 1px solid red;
+}
+
+.x-btn {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: red;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-size: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.edit-image-item.to-delete .x-btn {
+    background: green; /* Menja boju u zelenu (undo) */
+}
 
 
 

@@ -2,41 +2,27 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Profile.css";
 
-type Category = {
-  id: number;
-  name: string;
-};
-
-type Image = {
-  id: number;
-  title: string;
-  file_path: string;
-};
-
-type Artwork = {
-  id: number;
-  naziv: string;
-  opis: string;
-  category?: Category;
-  images?: Image[];
-};
-
-type User = {
-  id: number;
-  name: string;
-};
+type Category = { id: number; name: string; };
+type Image = { id: number; title: string; file_path: string; };
+type Artwork = { id: number; naziv: string; opis: string; category?: Category; images?: Image[]; };
+type User = { id: number; name: string; };
 
 function Profile() {
   const navigate = useNavigate();
 
   const [showForm, setShowForm] = useState(false);
   const [editingArtworkId, setEditingArtworkId] = useState<number | null>(null);
-  
   const [naziv, setNaziv] = useState("");
   const [opis, setOpis] = useState("");
   const [categoryId, setCategoryId] = useState<number | "">("");
-  const [images, setImages] = useState<File[]>([]);
+
+  // NOVO: Razdvojeni fajlovi i njihovi preview URL-ovi radi lakšeg brisanja
+  const [newFiles, setNewFiles] = useState<File[]>([]);
+  const [newPreviews, setNewPreviews] = useState<string[]>([]);
   
+  const [currentImages, setCurrentImages] = useState<Image[]>([]);
+  const [imagesToDelete, setImagesToDelete] = useState<number[]>([]);
+
   const [categories, setCategories] = useState<Category[]>([]);
   const [submitMsg, setSubmitMsg] = useState("");
   const [user, setUser] = useState<User | null>(null);
@@ -45,27 +31,19 @@ function Profile() {
   useEffect(() => {
     document.title = "Profile";
     const token = localStorage.getItem("auth_token");
-    if (!token) {
-      navigate("/login");
-      return;
-    }
+    if (!token) { navigate("/login"); return; }
     fetchUser();
     fetchCategories();
   }, []);
 
-  useEffect(() => {
-    if (user) {
-      fetchArtworks(user.id);
-    }
-  }, [user]);
+  useEffect(() => { if (user) fetchArtworks(user.id); }, [user]);
 
   const fetchCategories = async () => {
     const token = localStorage.getItem("auth_token");
     const res = await fetch("http://localhost:8000/api/categories", {
       headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
     });
-    const data = await res.json();
-    setCategories(data);
+    setCategories(await res.json());
   };
 
   const fetchUser = async () => {
@@ -73,8 +51,7 @@ function Profile() {
     const res = await fetch("http://localhost:8000/api/user", {
       headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
     });
-    const data = await res.json();
-    setUser(data);
+    setUser(await res.json());
   };
 
   const fetchArtworks = async (userId: number) => {
@@ -82,9 +59,7 @@ function Profile() {
     const res = await fetch(`http://localhost:8000/api/artworks/${userId}`, {
       headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
     });
-    if (!res.ok) return;
-    const data = await res.json();
-    setArtworks(data);
+    if (res.ok) setArtworks(await res.json());
   };
 
   const logout = async () => {
@@ -101,30 +76,42 @@ function Profile() {
     navigate("/login");
   };
 
-  const handleImagesChange = (files: FileList | null) => {
-    if (!files) return;
-    setImages(Array.from(files));
+  // Dodavanje novih slika (kumulativno)
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const selectedFiles = Array.from(e.target.files);
+      setNewFiles(prev => [...prev, ...selectedFiles]);
+
+      const urls = selectedFiles.map(file => URL.createObjectURL(file));
+      setNewPreviews(prev => [...prev, ...urls]);
+    }
   };
 
-  // Funkcija koja popunjava formu za EDIT
+  // Uklanjanje NOVE slike pre uploada
+  const removeNewImage = (index: number) => {
+    setNewFiles(prev => prev.filter((_, i) => i !== index));
+    setNewPreviews(prev => prev.filter((_, i) => i !== index));
+  };
+
   const startEdit = (art: Artwork) => {
     setEditingArtworkId(art.id);
     setNaziv(art.naziv);
     setOpis(art.opis);
     setCategoryId(art.category?.id || "");
+    setCurrentImages(art.images || []);
+    setImagesToDelete([]);
+    setNewFiles([]);
+    setNewPreviews([]);
     setShowForm(true);
-    // Skroluje na vrh stranice gde je forma
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // Funkcija za odustajanje od edita/kreiranja
   const cancelAction = () => {
     setShowForm(false);
     setEditingArtworkId(null);
-    setNaziv("");
-    setOpis("");
-    setCategoryId("");
-    setImages([]);
+    setNaziv(""); setOpis(""); setCategoryId(""); 
+    setNewFiles([]); setNewPreviews([]);
+    setImagesToDelete([]); setCurrentImages([]);
   };
 
   const handleSaveArtwork = async (e: React.FormEvent) => {
@@ -136,34 +123,28 @@ function Profile() {
     formData.append("naziv", naziv);
     formData.append("opis", opis || "");
     formData.append("category_id", String(categoryId));
-    images.forEach((f) => formData.append("images[]", f));
+    
+    // Šaljemo samo preostale nove fajlove
+    newFiles.forEach((f) => formData.append("images[]", f));
 
     let url = "http://localhost:8000/api/artworks";
-    
-    // Ako editujemo, menjamo URL i dodajemo _method PUT
     if (editingArtworkId) {
-      url = `http://localhost:8000/api/artworks/${editingArtworkId}`;
+      url = `${url}/${editingArtworkId}`;
       formData.append("_method", "PUT");
+      imagesToDelete.forEach(id => formData.append("delete_images[]", String(id)));
     }
 
     const res = await fetch(url, {
-      method: "POST", // Uvek POST zbog slanja fajlova (Method Spoofing)
+      method: "POST",
       headers: { Authorization: `Bearer ${token}` },
       body: formData,
     });
 
-    if (!res.ok) {
-      setSubmitMsg("Error saving artwork");
-      return;
-    }
-
-    setSubmitMsg(editingArtworkId ? "Artwork updated 🎉" : "Artwork created 🎉");
-    setTimeout(() => setSubmitMsg(""), 5000);
-    
-    cancelAction(); // Resetuj formu i stanja
-
-    if (user) {
-      fetchArtworks(user.id);
+    if (res.ok) {
+      setSubmitMsg(editingArtworkId ? "Updated 🎉" : "Created 🎉");
+      setTimeout(() => setSubmitMsg(""), 5000);
+      cancelAction();
+      if (user) fetchArtworks(user.id);
     }
   };
 
@@ -184,58 +165,62 @@ function Profile() {
         {showForm && (
           <form className="artwork-form" onSubmit={handleSaveArtwork}>
             <h3>{editingArtworkId ? "Update Artwork" : "New Artwork"}</h3>
-            <input
-              type="text"
-              placeholder="Artwork name"
-              value={naziv}
-              onChange={(e) => setNaziv(e.target.value)}
-              required
-            />
-            <textarea
-              placeholder="Description"
-              value={opis}
-              onChange={(e) => setOpis(e.target.value)}
-            />
-            <select
-              value={categoryId}
-              onChange={(e) => setCategoryId(Number(e.target.value))}
-              required
-            >
+            <input type="text" placeholder="Name" value={naziv} onChange={(e) => setNaziv(e.target.value)} required />
+            <textarea placeholder="Description" value={opis} onChange={(e) => setOpis(e.target.value)} />
+            <select value={categoryId} onChange={(e) => setCategoryId(Number(e.target.value))} required>
               <option value="">Select category</option>
-              {categories.map((c) => (
-                <option key={c.id} value={c.id}>{c.name}</option>
-              ))}
+              {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
-            <input type="file" multiple onChange={(e) => handleImagesChange(e.target.files)} />
-            <button type="submit" className="save-btn">
-              {editingArtworkId ? "Update Artwork" : "Save"}
-            </button>
+
+            <div className="manage-images">
+              <p>Artwork Gallery:</p>
+              <div className="edit-images-grid">
+                {/* STARE SLIKE IZ BAZE */}
+                {currentImages.map(img => (
+                  <div key={img.id} className={`edit-image-item ${imagesToDelete.includes(img.id) ? 'to-delete' : ''}`}>
+                    <img src={`http://localhost:8000/storage/${img.file_path}`} alt="old" />
+                    <button type="button" className="x-btn" onClick={() => {
+                        setImagesToDelete(prev => prev.includes(img.id) ? prev.filter(i => i !== img.id) : [...prev, img.id]);
+                    }}>
+                      {imagesToDelete.includes(img.id) ? "↺" : "✕"}
+                    </button>
+                  </div>
+                ))}
+
+                {/* NOVE IZABRANE SLIKE */}
+                {newPreviews.map((url, index) => (
+                  <div key={index} className="edit-image-item new-preview">
+                    <img src={url} alt="new-preview" />
+                    <button type="button" className="x-btn" onClick={() => removeNewImage(index)}>✕</button>
+                  </div>
+                ))}
+                
+                {/* DUGME ZA DODAVANJE UNUTAR GRID-A (Opciono, ili ostavi klasičan input ispod) */}
+                <label className="add-more-box">
+                  +
+                  <input type="file" multiple onChange={handleFileSelect} hidden />
+                </label>
+              </div>
+            </div>
+
+            <button type="submit" className="save-btn">{editingArtworkId ? "Update Artwork" : "Save"}</button>
           </form>
         )}
       </div>
 
       <section className="your-artworks">
         <h2>Your artworks</h2>
-        {artworks.length === 0 && <p>No artworks yet.</p>}
         <div className="artwork-grid">
           {artworks.map((art) => (
             <div key={art.id} className="artwork-card">
               <h3>{art.naziv}</h3>
               <p className="category">{art.category?.name}</p>
-              <p className="description">{art.opis}</p>
               <div className="artwork-images">
                 {art.images?.map((img) => (
-                  <img
-                    key={img.id}
-                    src={`http://localhost:8000/storage/${img.file_path}`}
-                    alt={art.naziv}
-                  />
+                  <img key={img.id} src={`http://localhost:8000/storage/${img.file_path}`} alt="art" />
                 ))}
               </div>
-              {/* DUGME ZA UPDATE */}
-              <button className="update-btn" onClick={() => startEdit(art)}>
-                Update artwork
-              </button>
+              <button className="update-btn" onClick={() => startEdit(art)}>Update artwork</button>
             </div>
           ))}
         </div>
