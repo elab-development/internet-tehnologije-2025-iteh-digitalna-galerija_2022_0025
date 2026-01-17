@@ -348,3 +348,38 @@ body.dark-mode .artwork-images-preview img {
 body.dark-mode .edit-images-grid {
   background: #252525;
 }
+
+/* =========================
+   FULLSCREEN IMAGE PREVIEW
+========================= */
+.image-preview-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  cursor: zoom-out;
+}
+
+.image-preview-full {
+  max-width: 90vw;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 20px;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+  animation: zoomIn 0.25s ease-out;
+  cursor: default;
+}
+
+@keyframes zoomIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

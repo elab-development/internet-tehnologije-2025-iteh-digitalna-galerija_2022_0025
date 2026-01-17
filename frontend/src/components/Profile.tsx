@@ -25,6 +25,7 @@ function Profile() {
   const [submitMsg, setSubmitMsg] = useState("");
   const [user, setUser] = useState<User | null>(null);
   const [artworks, setArtworks] = useState<Artwork[]>([]);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   useEffect(() => {
     document.title = "Profile";
@@ -167,7 +168,9 @@ function Profile() {
                 <p className="description">{art.opis}</p>
                 <div className="artwork-images-preview">
                   {art.images?.map((img) => (
-                    <img key={img.id} src={`http://localhost:8000/storage/${img.file_path}`} alt="art" />
+                    <img key={img.id} src={`http://localhost:8000/storage/${img.file_path}`} alt="art" 
+                    onClick={() => setPreviewImage(`http://localhost:8000/storage/${img.file_path}`)}/>
+                    
                   ))}
                 </div>
                 <button className="update-btn" onClick={() => startEdit(art)}>Update artwork</button>
@@ -235,6 +238,16 @@ function Profile() {
           </div>
         </div>
       )}
+      {previewImage && (
+      <div className="image-preview-overlay" onClick={() => setPreviewImage(null)}>
+        <img
+          src={previewImage}
+          alt="Preview"
+          className="image-preview-full"
+          onClick={(e) => e.stopPropagation()}
+        />
+      </div>
+    )}
     </div>
   );
 }
