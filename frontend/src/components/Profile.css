@@ -211,97 +211,8 @@
 
 .artwork-grid {
   display: grid;
-<<<<<<< HEAD
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 30px;
-=======
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 24px;
-}
-
-/* JEDAN ARTWORK */
-.artwork-card {
-  background-color: #ffffff;
-  border-radius: 16px;
-  padding: 16px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-}
-
-.artwork-card h3 {
-  margin-bottom: 4px;
-}
-
-.artwork-card .category {
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 12px;
-}
-
-/* SLIKE UNUTAR ARTWORK-A */
-.artwork-images {
-    
-  display: grid;
-  
-  grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
-}
-
-.image-container {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-
-.artwork-images img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 12px;
->>>>>>> f88e328 (Izmene u ArtworkController, Artwork modelu i frontend komponentama)
-}
-
-.delete-image-btn {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  background-color: rgba(255, 0, 0, 0.8);
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 28px;
-  height: 28px;
-  font-size: 16px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition: opacity 0.2s ease-in-out;
-}
-
-.image-container:hover .delete-image-btn {
-  opacity: 1;
-}
-
-.delete-image-btn:hover {
-  background-color: rgba(255, 0, 0, 1);
-  transform: scale(1.1);
-}
-
-.delete-artwork-btn {
-  width: 100%;
-  margin-top: 12px;
-  padding: 8px;
-  border: none;
-  border-radius: 6px;
-  background-color: #dc3545;
-  color: white;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.delete-artwork-btn:hover {
-  background-color: #c82333;
 }
 
 /* =========================
@@ -315,6 +226,8 @@
   display: flex;
   flex-direction: column;
   transition: 0.3s ease;
+  border: 2px solid #000000;
+  
 }
 
 .artwork-card:hover {
@@ -415,14 +328,20 @@
    DARK MODE
 ========================= */
 body.dark-mode .profile-page {
-  background: #121212;
+  
   color: #e0e0e0;
 }
+
 
 body.dark-mode .profile-header,
 body.dark-mode .artwork-card,
 body.dark-mode .modal-content {
   background: #1e1e1e;
+}
+
+body.dark-mode .artwork-card {
+  background: #1e1e1e;
+  border: 2px solid #ffffff; 
 }
 
 body.dark-mode .category-tag {
@@ -471,4 +390,36 @@ body.dark-mode .edit-images-grid {
     transform: scale(1);
     opacity: 1;
   }
+}
+
+.delete-artwork-btn {
+  margin-top: 20px;
+  width: 100%;
+  background: transparent;
+  border: 2px solid #dc3545; /* Crvenkasta boja */
+  color: #dc3545;
+  padding: 10px;
+  border-radius: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.delete-artwork-btn:hover {
+  background: #dc3545;
+  color: white;
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.2);
+}
+
+body.dark-mode .delete-artwork-btn {
+  margin-top: 20px;
+  border-color: #ff5f6d; /* Nešto svetlija crvena za bolji kontrast */
+  color: #ff5f6d;
+}
+
+body.dark-mode .delete-artwork-btn:hover {
+
+  background: #ff5f6d;
+  color: #ffffff;
+  box-shadow: 0 4px 15px rgba(255, 95, 109, 0.3);
 }

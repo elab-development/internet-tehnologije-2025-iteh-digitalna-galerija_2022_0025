@@ -9,7 +9,8 @@
 
 h1 {
   text-align: center;
-  margin-top: 40px;
+  padding-top: 40px; 
+  margin-top: 0;      
   color: #1c1c97;
   font-size: 2.5rem;
 }
@@ -151,7 +152,32 @@ body.dark-mode .artwork-card h3 { color: #fff; }
 body.dark-mode .description { color: #ccc; }
 body.dark-mode .category-tag { background: #333; color: #007bff; }
 body.dark-mode .modern-select { background: #1e1e1e; color: #007bff; border-color: #007bff; }
+
 body.dark-mode .artwork-images img { border-color: rgba(255,255,255,0.1); }
+
+/* Centriranje ostaje isto, ali dodajemo stilove za boje */
+body.dark-mode .pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+}
+
+/* Boja brojeva i strelica u dark modu */
+body.dark-mode .pagination .MuiPaginationItem-root {
+  color: #ffffff !important; /* Beli brojevi i strelice */
+  border-color: rgba(255, 255, 255, 0.3) !important; /* Suptilna ivica ako koristiš outline stil */
+}
+
+/* Boja aktivnog broja (one stranice na kojoj si trenutno) */
+body.dark-mode .pagination .Mui-selected {
+  background-color: #1c1c97 !important; /* Boja tvog brenda (tamno plava) */
+  color: #ffffff !important;
+}
+
+/* Boja kada se pređe mišem preko broja */
+body.dark-mode .pagination .MuiPaginationItem-root:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
 
 /* =========================
    FULLSCREEN PREVIEW (Copy-paste sa profila)

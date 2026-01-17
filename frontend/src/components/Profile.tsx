@@ -2,73 +2,55 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Profile.css";
 
-<<<<<<< HEAD
+// Tipovi podataka
 type Category = { id: number; name: string; };
 type Image = { id: number; title: string; file_path: string; };
 type Artwork = { id: number; naziv: string; opis: string; category?: Category; images?: Image[]; };
 type User = { id: number; name: string; };
-=======
-type Category = {
-  id: number;
-  name: string;
-};
-
-type Image = {
-  id: number | string;
-  title: string;
-  file_path: string;
-};
-
-type Artwork = {
-  id: number;
-  naziv: string;
-  opis: string;
-  category?: Category;
-  images?: Image[];
-};
-
-type User = {
-  id: number;
-  name: string;
-};
->>>>>>> f88e328 (Izmene u ArtworkController, Artwork modelu i frontend komponentama)
 
 function Profile() {
   const navigate = useNavigate();
 
+  // State za formu i UI
   const [showForm, setShowForm] = useState(false);
   const [editingArtworkId, setEditingArtworkId] = useState<number | null>(null);
   const [naziv, setNaziv] = useState("");
   const [opis, setOpis] = useState("");
   const [categoryId, setCategoryId] = useState<number | "">("");
 
+  // State za slike
   const [newFiles, setNewFiles] = useState<File[]>([]);
   const [newPreviews, setNewPreviews] = useState<string[]>([]);
   const [currentImages, setCurrentImages] = useState<Image[]>([]);
   const [imagesToDelete, setImagesToDelete] = useState<number[]>([]);
 
+  // State za podatke sa servera
   const [categories, setCategories] = useState<Category[]>([]);
   const [submitMsg, setSubmitMsg] = useState("");
   const [user, setUser] = useState<User | null>(null);
   const [artworks, setArtworks] = useState<Artwork[]>([]);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
 
+  // Inicijalno učitavanje
   useEffect(() => {
     document.title = "Profile";
     const token = localStorage.getItem("auth_token");
     if (!token) { navigate("/login"); return; }
     fetchUser();
     fetchCategories();
-  }, []);
+  }, [navigate]);
 
-  useEffect(() => { if (user) fetchArtworks(user.id); }, [user]);
+  useEffect(() => { 
+    if (user) fetchArtworks(user.id); 
+  }, [user]);
 
+  // API Pozivi
   const fetchCategories = async () => {
     const token = localStorage.getItem("auth_token");
     const res = await fetch("http://localhost:8000/api/categories", {
       headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
     });
-    setCategories(await res.json());
+    if (res.ok) setCategories(await res.json());
   };
 
   const fetchUser = async () => {
@@ -76,7 +58,7 @@ function Profile() {
     const res = await fetch("http://localhost:8000/api/user", {
       headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
     });
-    setUser(await res.json());
+    if (res.ok) setUser(await res.json());
   };
 
   const fetchArtworks = async (userId: number) => {
@@ -101,6 +83,7 @@ function Profile() {
     navigate("/login");
   };
 
+  // Upravljanje slikama u formi
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const selectedFiles = Array.from(e.target.files);
@@ -111,10 +94,12 @@ function Profile() {
   };
 
   const removeNewImage = (index: number) => {
+    URL.revokeObjectURL(newPreviews[index]); // Oslobađanje memorije
     setNewFiles(prev => prev.filter((_, i) => i !== index));
     setNewPreviews(prev => prev.filter((_, i) => i !== index));
   };
 
+  // Akcije (Create/Edit/Delete)
   const startEdit = (art: Artwork) => {
     setEditingArtworkId(art.id);
     setNaziv(art.naziv);
@@ -128,6 +113,7 @@ function Profile() {
   };
 
   const cancelAction = () => {
+    newPreviews.forEach(url => URL.revokeObjectURL(url));
     setShowForm(false);
     setEditingArtworkId(null);
     setNaziv(""); setOpis(""); setCategoryId(""); 
@@ -154,96 +140,34 @@ function Profile() {
     }
 
     const res = await fetch(url, {
-      method: "POST",
+      method: "POST", // Laravel zahteva POST + _method: PUT za FormData
       headers: { Authorization: `Bearer ${token}` },
       body: formData,
     });
 
-<<<<<<< HEAD
     if (res.ok) {
-      setSubmitMsg(editingArtworkId ? "Updated 🎉" : "Created 🎉");
-      setTimeout(() => setSubmitMsg(""), 5000);
+      setSubmitMsg(editingArtworkId ? "Artwork updated 🎉" : "Artwork created 🎉");
       cancelAction();
       if (user) fetchArtworks(user.id);
-=======
-    if (!res.ok) {
-      setSubmitMsg("Greška pri kreiranju rada");
-      return;
-    }
-
-    
-    setSubmitMsg("Rad je kreiran 🎉");
-
-    // sakrij poruku nakon 5 sekundi
-    setTimeout(() => {
-      setSubmitMsg("");
-    }, 5000);
-    
-    setShowForm(false);
-    setNaziv("");
-    setOpis("");
-    setCategoryId("");
-    setImages([]);
-
-    if (user) {
-      fetchArtworks(user.id); // refresh artworks nakon kreiranja
->>>>>>> f88e328 (Izmene u ArtworkController, Artwork modelu i frontend komponentama)
-    }
-  };
-
-  const deleteImage = async (imageId: number | string) => {
-    const token = localStorage.getItem("auth_token");
-    if (!token) return;
-
-    if (!window.confirm("Da li ste sigurni da želite da obrišete ovu sliku?")) {
-      return;
-    }
-
-    const res = await fetch(`http://localhost:8000/api/images/${imageId}`, {
-      method: "DELETE",
-      headers: { Authorization: `Bearer ${token}` },
-    });
-
-    if (!res.ok) {
-      setSubmitMsg("Greška pri brisanju slike");
-      return;
-    }
-
-    setSubmitMsg("Slika je uspešno obrisana");
-    setTimeout(() => {
-      setSubmitMsg("");
-    }, 3000);
-
-    if (user) {
-      fetchArtworks(user.id);
+      setTimeout(() => setSubmitMsg(""), 5000);
+    } else {
+      setSubmitMsg("Error saving artwork ❌");
     }
   };
 
   const deleteArtwork = async (artworkId: number) => {
     const token = localStorage.getItem("auth_token");
-    if (!token) return;
-
-    if (!window.confirm("Da li ste sigurni da želite da obrišete ovaj rad i sve njegove slike?")) {
-      return;
-    }
+    if (!token || !window.confirm("Are you sure you want to delete this artwork and all its images?")) return;
 
     const res = await fetch(`http://localhost:8000/api/artworks/${artworkId}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
     });
 
-    if (!res.ok) {
-      setSubmitMsg("Greška pri brisanju rada");
-      return;
-    }
-
-    setSubmitMsg("Rad je uspešno obrisan");
-    setTimeout(() => {
-      setSubmitMsg("");
-    }, 3000);
-
-    if (user) {
-      fetchArtworks(user.id);
+    if (res.ok) {
+      setSubmitMsg("Artwork deleted");
+      if (user) fetchArtworks(user.id);
+      setTimeout(() => setSubmitMsg(""), 3000);
     }
   };
 
@@ -261,11 +185,10 @@ function Profile() {
         </button>
       </div>
 
-<<<<<<< HEAD
       <section className="your-artworks">
         <h2>Your Artworks</h2>
         {artworks.length === 0 ? (
-          <p className="no-artworks-msg">No artworks yet. Start creating!</p>
+          <p className="no-artworks-msg" style={{textAlign: 'center'}}>No artworks yet. Start creating!</p>
         ) : (
           <div className="artwork-grid">
             {artworks.map((art) => (
@@ -273,62 +196,29 @@ function Profile() {
                 <h3>{art.naziv}</h3>
                 <p className="category-tag">{art.category?.name}</p>
                 <p className="description">{art.opis}</p>
+                
                 <div className="artwork-images-preview">
                   {art.images?.map((img) => (
-                    <img key={img.id} src={`http://localhost:8000/storage/${img.file_path}`} alt="art" 
-                    onClick={() => setPreviewImage(`http://localhost:8000/storage/${img.file_path}`)}/>
-                    
+                    <img 
+                      key={img.id} 
+                      src={`http://localhost:8000/storage/${img.file_path}`} 
+                      alt="art" 
+                      onClick={() => setPreviewImage(`http://localhost:8000/storage/${img.file_path}`)}
+                    />
                   ))}
                 </div>
-                <button className="update-btn" onClick={() => startEdit(art)}>Update artwork</button>
+
+                <div className="card-footer-actions">
+                    <button className="update-btn" onClick={() => startEdit(art)}>Edit artwork</button>
+                    <button className="delete-artwork-btn" onClick={() => deleteArtwork(art.id)}>Delete artwork</button>
+                </div>
               </div>
             ))}
           </div>
         )}
-=======
-     
-      {/* YOUR ARTWORKS */}
-    <section className="your-artworks">
-      <h2>Vaši radovi</h2>
-
-      {artworks.length === 0 && <p>Nema radova još.</p>}
-
-      <div className="artwork-grid">
-        {artworks.map((art) => (
-          <div key={art.id} className="artwork-card">
-            <h3>{art.naziv}</h3>
-            <p className="category">{art.category?.name}</p>
-            <p className="description">{art.opis}</p>
-            <div className="artwork-images">
-              {art.images?.map((img) => (
-                <div key={img.id} className="image-container">
-                  <img
-                    src={`http://localhost:8000/storage/${img.file_path}`}
-                    alt={art.naziv}
-                  />
-                  <button
-                    className="delete-image-btn"
-                    onClick={() => deleteImage(img.id)}
-                    title="Obriši sliku"
-                  >
-                    ✕
-                  </button>
-                </div>
-              ))}
-              </div>
-            <button
-              className="delete-artwork-btn"
-              onClick={() => deleteArtwork(art.id)}
-            >
-              Obriši rad
-            </button>
-            </div>
-          ))}
-        </div>
->>>>>>> f88e328 (Izmene u ArtworkController, Artwork modelu i frontend komponentama)
       </section>
 
-      {/* MODALNI PROZOR - POTPUNO IZMEXTEN VAN SVEGA */}
+      {/* MODAL FOR NEW/EDIT ARTWORK */}
       {showForm && (
         <div className="modal-overlay" onClick={cancelAction}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -351,11 +241,11 @@ function Profile() {
               </div>
 
               <div className="manage-images-section">
-                <label>Gallery Management:</label>
+                <label style={{fontWeight: 'bold', display: 'block', marginBottom: '10px'}}>Gallery Management:</label>
                 <div className="edit-images-grid">
                   {currentImages.map(img => (
                     <div key={img.id} className={`edit-image-item ${imagesToDelete.includes(img.id) ? 'marked-delete' : ''}`}>
-                      <img src={`http://localhost:8000/storage/${img.file_path}`} alt="old" />
+                      <img src={`http://localhost:8000/storage/${img.file_path}`} alt="existing" />
                       <button type="button" className="img-action-btn" onClick={() => {
                           setImagesToDelete(prev => prev.includes(img.id) ? prev.filter(i => i !== img.id) : [...prev, img.id]);
                       }}>
@@ -367,7 +257,7 @@ function Profile() {
                   {newPreviews.map((url, index) => (
                     <div key={index} className="edit-image-item new-preview">
                       <img src={url} alt="new-preview" />
-                      <button type="button" className="img-action-btn delete" onClick={() => removeNewImage(index)}>✕</button>
+                      <button type="button" className="img-action-btn" onClick={() => removeNewImage(index)}>✕</button>
                     </div>
                   ))}
                   
@@ -386,16 +276,18 @@ function Profile() {
           </div>
         </div>
       )}
+
+      {/* FULLSCREEN PREVIEW */}
       {previewImage && (
-      <div className="image-preview-overlay" onClick={() => setPreviewImage(null)}>
-        <img
-          src={previewImage}
-          alt="Preview"
-          className="image-preview-full"
-          onClick={(e) => e.stopPropagation()}
-        />
-      </div>
-    )}
+        <div className="image-preview-overlay" onClick={() => setPreviewImage(null)}>
+          <img
+            src={previewImage}
+            alt="Preview"
+            className="image-preview-full"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
     </div>
   );
 }
