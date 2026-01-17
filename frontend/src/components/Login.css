@@ -1,74 +1,163 @@
-.button-container {
-    margin-top: 20px; 
+/* =========================
+   GLOBAL AUTH LAYOUT
+========================= */
+.auth-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f8f9fa; /* Sivo kao na profilu */
+  padding: 20px;
 }
 
-.container {
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #C09FDE;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1; 
-    box-sizing: border-box; 
+/* KARTICA (Slično kao Modal na profilu) */
+.auth-card {
+  background: #C09FDE;
+  width: 100%;
+  max-width: 420px;
+  padding: 40px;
+  border-radius: 26px; /* Zaobljeno kao i ostali elementi */
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.04);
+  text-align: center;
 }
 
-h1 {
-    text-align: center;
+.auth-card h2 {
+  color: #1c1c97;
+  margin-bottom: 30px;
+  font-size: 28px;
+  font-weight: bold;
 }
 
-.form-group {
-    margin-bottom: 15px;
+/* =========================
+   FORMA I INPUTI
+========================= */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
-label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
+.auth-input-group {
+  text-align: left;
 }
 
-input[type="text"],
-input[type="password"] {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box; 
+.auth-input-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+  margin-left: 5px;
 }
 
-button {
-    width: 100%;
-    padding: 10px;
-    border: none;
-    border-radius: 4px;
-    background-color: #007bff;
-    color: #fff;
-    cursor: pointer;
+.auth-input-group input {
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: 14px; /* Zaobljeni inputi */
+  border: 1px solid #ddd;
+  font-size: 15px;
+  background-color: #fdfdfd;
+  transition: 0.3s ease;
+  box-sizing: border-box;
 }
 
-button:hover {
-    background-color: #0056b3;
+.auth-input-group input:focus {
+  outline: none;
+  border-color: #1c1c97;
+  background-color: white;
+  box-shadow: 0 0 0 4px rgba(28, 28, 151, 0.05);
 }
 
-.error {
-    color: red;
-    margin-top: 10px; 
+.form-text {
+  font-size: 11px;
+  color: #888;
+  margin-top: 5px;
+  display: block;
 }
 
+/* =========================
+   DUGMIĆI (Ključni deo)
+========================= */
 
-
-@media (max-width: 768px) {
-    .container {
-        max-width: 90%;
-        padding: 10px;
-        position: relative;
-        top: auto;
-        left: auto;
-        transform: none;
-        margin-top: 20px; 
+/* Glavno dugme - Login / Register */
+.auth-main-btn {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 14px;
+  background-color: #1c1c97;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s ease;
+  margin-top: 10px;
 }
+
+.auth-main-btn:hover {
+  background-color: #e92eae;
+  transform: translateY(-2px);
+}
+
+/* Switch dugme - Kao Logout (Outline Pill stil) */
+.auth-switch-btn {
+  background: transparent;
+  border: 2px solid #007bff;
+  color: #007bff;
+  padding: 10px 25px;
+  border-radius: 999px; /* Pill shape */
+  font-weight: bold;
+  font-size: 13px;
+  cursor: pointer;
+  transition: 0.3s;
+  margin-top: 25px;
+  display: inline-block;
+}
+
+.auth-switch-btn:hover {
+  background: #007bff;
+  color: white;
+}
+
+/* =========================
+   ERROR & MESSAGES
+========================= */
+.auth-error {
+  color: #d93025;
+  background-color: #fce8e6;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 14px;
+  margin-top: 10px;
+  font-weight: 500;
+}
+
+/* =========================
+   DARK MODE
+========================= */
+body.dark-mode .auth-page {
+  background-color: #121212;
+}
+
+body.dark-mode .auth-card {
+  background-color: #1e1e1e;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+}
+
+body.dark-mode .auth-card h2 {
+  color: white;
+}
+
+body.dark-mode .auth-input-group label {
+  color: #eee;
+}
+
+body.dark-mode .auth-input-group input {
+  background-color: #2d2d2d;
+  border-color: #444;
+  color: white;
+}
+
+body.dark-mode .auth-main-btn {
+  background-color: #007bff;
 }
