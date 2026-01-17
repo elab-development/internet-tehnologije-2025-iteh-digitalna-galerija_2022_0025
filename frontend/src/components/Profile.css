@@ -57,6 +57,7 @@ body {
 
 /* BUTTONS */
 .create-btn,
+.update-btn,
 .save-btn {
   width: 100%;
   padding: 10px;
@@ -69,6 +70,7 @@ body {
 }
 
 .create-btn:hover,
+.update-btn:hover,
 .save-btn:hover {
   background-color: #0056b3;
 }
