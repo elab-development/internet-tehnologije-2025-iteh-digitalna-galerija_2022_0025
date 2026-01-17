@@ -4,7 +4,6 @@ import Pagination from "@mui/material/Pagination";
 
 type Category = { id: number; name: string };
 type Image = { id: number; file_path: string };
-type User = { id: number; name: string };
 
 type Artwork = {
   id: number;
@@ -12,7 +11,6 @@ type Artwork = {
   opis: string;
   category?: Category;
   images?: Image[];
- 
 };
 
 const Gallery: React.FC = () => {
@@ -20,9 +18,9 @@ const Gallery: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [currentPage, setCurrentPage] = useState(1);
-  
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
-  const perPage = 8; // fiksno 8 po stranici
+  const perPage = 6;
 
   useEffect(() => {
     document.title = "Gallery";
@@ -30,96 +28,76 @@ const Gallery: React.FC = () => {
     fetchArtworks();
   }, []);
 
-  // Fetch categories
-    const fetchCategories = async () => {
+  const fetchCategories = async () => {
     const res = await fetch("http://localhost:8000/api/categories");
-    if (!res.ok) return;
-    const data = await res.json();
-    setCategories(data); // data je lista kategorija
-    };
-
-
-  // Fetch artworks (javno)
-    const fetchArtworks = async () => {
-    const res = await fetch("http://localhost:8000/api/artworks");
-    if (!res.ok) return;
-    const data = await res.json();
-    setArtworks(data.data || []); // Laravel paginate
-    };
-
-  // Pagination change
-  const handlePageChange = (_: any, value: number) => {
-    setCurrentPage(value);
+    if (res.ok) setCategories(await res.json());
   };
 
-  // Filter artworks by selected category
+  const fetchArtworks = async () => {
+    const res = await fetch("http://localhost:8000/api/artworks");
+    if (res.ok) {
+      const data = await res.json();
+      setArtworks(data.data || []);
+    }
+  };
+
+  const handlePageChange = (_: any, value: number) => {
+    setCurrentPage(value);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   const filteredArtworks = selectedCategory
     ? artworks.filter((art) => art.category?.name === selectedCategory)
     : artworks;
 
-  // Determine artworks for current page
   const startIndex = (currentPage - 1) * perPage;
-  const endIndex = startIndex + perPage;
-  const artworksToShow = filteredArtworks.slice(startIndex, endIndex);
-
-  // Total pages
+  const artworksToShow = filteredArtworks.slice(startIndex, startIndex + perPage);
   const pageCount = Math.ceil(filteredArtworks.length / perPage);
 
   return (
-    <div>
+    <div className="gallery-page">
       <h1>Gallery</h1>
 
-        {/* Filter po kategoriji - Stilizovana padajuća lista */}
-        <div className="gallery-filter-section">
+      <div className="gallery-filter-section">
         <div className="custom-select-wrapper">
-            <select
+          <select
             className="modern-select"
             value={selectedCategory}
             onChange={(e) => {
-                setSelectedCategory(e.target.value);
-                setCurrentPage(1);
+              setSelectedCategory(e.target.value);
+              setCurrentPage(1);
             }}
-            >
+          >
             <option value="">All Categories</option>
             {categories.map((cat) => (
-                <option key={cat.id} value={cat.name}>
-                {cat.name}
-                </option>
+              <option key={cat.id} value={cat.name}>{cat.name}</option>
             ))}
-            </select>
-            <span className="select-arrow">▼</span>
+          </select>
+          <span className="select-arrow">▼</span>
         </div>
-        </div>
+      </div>
 
-      {/* Grid artworka */}
       <div className="image-grid">
         {artworksToShow.map((art) => (
           <div key={art.id} className="artwork-card">
-            {/* Naziv dela – Ime umetnika */}
-            <h3>
-              {art.naziv} 
-            </h3>
-
-            <p className="category">{art.category?.name}</p>
-            
+            <h3>{art.naziv}</h3>
+            <p className="category-tag">{art.category?.name}</p>
             <p className="description">{art.opis}</p>
-            {/* Slike */}
+            
             <div className="artwork-images">
               {art.images?.map((img) => (
                 <img
                   key={img.id}
                   src={`http://localhost:8000/storage/${img.file_path}`}
                   alt={art.naziv}
+                  onClick={() => setPreviewImage(`http://localhost:8000/storage/${img.file_path}`)}
                 />
               ))}
             </div>
-
-            
           </div>
         ))}
       </div>
 
-      {/* Pagination */}
       {pageCount > 1 && (
         <div className="pagination">
           <Pagination
@@ -128,6 +106,13 @@ const Gallery: React.FC = () => {
             onChange={handlePageChange}
             color="primary"
           />
+        </div>
+      )}
+
+      {/* FULLSCREEN PREVIEW - Isto kao na profilu */}
+      {previewImage && (
+        <div className="image-preview-overlay" onClick={() => setPreviewImage(null)}>
+          <img src={previewImage} alt="Full view" className="image-preview-full" />
         </div>
       )}
     </div>

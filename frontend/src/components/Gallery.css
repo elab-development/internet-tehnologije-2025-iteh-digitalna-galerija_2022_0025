@@ -1,24 +1,17 @@
 /* =========================
-   GLOBAL
+   GLOBAL & LAYOUT
 ========================= */
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: #ffffff;
+.gallery-page {
+  
+  min-height: 100vh;
+  padding-bottom: 60px;
 }
 
 h1 {
   text-align: center;
-  margin-top: 20px;
-}
-
-h2 {
-  text-align: center;
-  margin-top: 20px;
+  margin-top: 40px;
+  color: #1c1c97;
+  font-size: 2.5rem;
 }
 
 /* =========================
@@ -27,7 +20,7 @@ h2 {
 .gallery-filter-section {
   display: flex;
   justify-content: center;
-  margin: 30px 0;
+  margin: 30px 0 50px;
 }
 
 .custom-select-wrapper {
@@ -45,23 +38,16 @@ h2 {
   background-color: #fff;
   border: 2px solid #1c1c97;
   border-radius: 12px;
-  appearance: none; /* Uklanja sistemsku strelicu */
+  appearance: none;
   cursor: pointer;
   transition: all 0.3s ease;
   outline: none;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
 .modern-select:hover {
   border-color: #e92eae;
-  box-shadow: 0 6px 15px rgba(233, 46, 174, 0.15);
 }
 
-.modern-select:focus {
-  border-color: #e92eae;
-}
-
-/* Prilagođena strelica */
 .select-arrow {
   position: absolute;
   top: 50%;
@@ -69,92 +55,83 @@ h2 {
   transform: translateY(-50%);
   color: #1c1c97;
   pointer-events: none;
-  font-size: 12px;
-}
-
-/* Dark mode podrška za Select */
-body.dark-mode .modern-select {
-  background-color: #261f1f;
-  color: #007bff;
-  border-color: #007bff;
-}
-
-body.dark-mode .select-arrow {
-  color: #007bff;
-}
-
-body.dark-mode .modern-select:hover {
-  border-color: #ffffff;
 }
 
 /* =========================
-   GRID ARTWORK
+   ARTWORK GRID (Slično kao na profilu)
 ========================= */
 .image-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 40px;
   padding: 20px;
-  justify-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-/* JEDAN ARTWORK CARD */
+/* KARTICA BEZ BELE POZADINE */
 .artwork-card {
-  background-color: #ffffff;
-  border-radius: 16px;
-  padding: 16px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  background: transparent; /* Nema bele kutije */
+  padding: 0;
+  box-shadow: none;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  transition: transform 0.3s ease;
   text-align: center;
 }
 
+.artwork-card:hover {
+  transform: translateY(-6px);
+}
+
 .artwork-card h3 {
-  margin-bottom: 4px;
-}
-
-.artwork-card .category {
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 8px;
-}
-
-.artwork-card .description {
-  font-size: 14px;
+  margin: 10px 0 5px;
+  font-size: 1.4rem;
   color: #333;
-  margin-bottom: 12px;
 }
 
-/* ARTWORK IMAGES */
+.category-tag {
+  align-self: center;
+  background: #f1f3f5;
+  color: #1c1c97;
+  padding: 5px 14px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.description {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 15px;
+  line-height: 1.4;
+}
+
+/* =========================
+   IMAGES (CONTAIN & ROUNDED)
+========================= */
 .artwork-images {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
+  gap: 12px;
+  width: 100%;
 }
 
 .artwork-images img {
   width: 100%;
-  height: 180px;
-  object-fit: cover;
-  border-radius: 12px;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;      /* Slika je cela, ne seče se */
+  border-radius: 18px;      /* Zaobljeni uglovi */
+  background: transparent;  /* Nema sive pozadine */
+  border: 1px solid rgba(0,0,0,0.06); /* Skoro providna ivica */
+  cursor: zoom-in;
+  transition: transform 0.3s ease;
 }
 
-/* LIKE BUTTON */
-.artwork-card button {
-  background-color: #1c1c97;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  font-size: 14px;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top: 8px;
-  transition: background-color 0.3s ease;
-}
-
-.artwork-card button:hover {
-  background-color: #e92eae;
+.artwork-images img:hover {
+  transform: scale(1.03);
 }
 
 /* =========================
@@ -163,43 +140,43 @@ body.dark-mode .modern-select:hover {
 .pagination {
   display: flex;
   justify-content: center;
-  margin-top: 20px;
+  margin-top: 50px;
 }
 
 /* =========================
-   DARK MODE
+   DARK MODE SUPPORT
 ========================= */
-body.dark-mode .artwork-card {
-  background-color: rgb(38, 31, 31);
-  color: white;
-  border: 1px solid #555;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
-}
-
-body.dark-mode .artwork-card .category,
-body.dark-mode .artwork-card .description {
-  color: #ccc;
-}
-
-body.dark-mode .artwork-card button {
-  background-color: #007bff;
-}
+body.dark-mode .gallery-page { background: #121212; color: #e0e0e0; }
+body.dark-mode .artwork-card h3 { color: #fff; }
+body.dark-mode .description { color: #ccc; }
+body.dark-mode .category-tag { background: #333; color: #007bff; }
+body.dark-mode .modern-select { background: #1e1e1e; color: #007bff; border-color: #007bff; }
+body.dark-mode .artwork-images img { border-color: rgba(255,255,255,0.1); }
 
 /* =========================
-   DARK MODE PAGINATION
+   FULLSCREEN PREVIEW (Copy-paste sa profila)
 ========================= */
-body.dark-mode .pagination .MuiPaginationItem-root {
-  color: white; /* boja brojeva i strelica */
-  background-color: transparent; /* da ne bude plava pozadina */
-  border: 1px solid #555; /* opcionalno, da se vidi ivica */
+.image-preview-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  cursor: zoom-out;
 }
 
-body.dark-mode .pagination .MuiPaginationItem-root.Mui-selected {
-  background-color:  #007bff; /* selektovana stranica */
-  color: black; /* tekst selektovane stranice */
+.image-preview-full {
+  max-width: 90vw;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 20px;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+  animation: zoomIn 0.25s ease-out;
 }
 
-body.dark-mode .pagination .MuiPaginationItem-root:hover {
-  background-color: rgba(255, 255, 255, 0.2); /* hover efekt */
+@keyframes zoomIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }
-
