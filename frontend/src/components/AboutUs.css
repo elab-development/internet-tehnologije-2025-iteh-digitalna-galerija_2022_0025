@@ -1,23 +1,118 @@
-.team-member {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
+/* =========================
+   PAGE LAYOUT
+========================= */
+.about-container {
+  max-width: 800px;
+  /* 100px gore, auto levo/desno, 0 dole */
+  margin: 50px auto 0; 
+  padding: 40px 20px;
+  background-color: #C09FDE;
+  min-height: 100vh;
+  border-radius: 30px;
 }
 
-.team-member img {
-  width: 200px;
-  height: 250px;
-  border-radius: 40%;
-  margin-left: 60px;
-  margin-right: 60px;
+h1 {
+  text-align: center;
+  color: #1c1c97;
+  margin-bottom: 40px;
 }
 
+/* =========================
+   FILTERS (Pill style)
+========================= */
 .filters {
-  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 50px;
+  flex-wrap: wrap;
 }
 
 .filters button {
- 
+  background: transparent;
+  border: 2px solid #007bff;
+  color: #007bff;
+  padding: 8px 24px;
+  border-radius: 999px; /* Pill oblik kao logout */
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+  width: auto; /* Da ne bude 100% širine */
+}
+
+.filters button:hover, 
+.filters button.active {
+  background: #007bff;
+  color: white;
+}
+
+/* =========================
+   TEAM GRID
+========================= */
+.team {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  align-items: center;
+}
+
+.team-member {
+  display: flex;
+  align-items: center;
+  background: transparent; /* Bez bele kutije */
   width: 100%;
-  color: black;
+  max-width: 600px;
+  padding: 20px;
+  transition: transform 0.3s;
+}
+
+.team-member:hover {
+  transform: translateX(10px); /* Suptilna animacija u stranu */
+}
+
+.team-member img {
+  width: 180px;
+  height: 180px;
+  object-fit: cover; /* Da glava uvek bude u kadru */
+  border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; /* Organski, moderan oblik */
+  margin-right: 40px;
+  border: 3px solid #1c1c97;
+  padding: 5px;
+}
+
+.member-info h3 {
+  margin: 0;
+  color: #1c1c97;
+  font-size: 1.5rem;
+}
+
+.member-info .position {
+  font-weight: bold;
+  color: #333;
+  margin: 5px 0;
+}
+
+.member-info .dept-tag {
+  display: inline-block;
+  background: #e9ecef;
+  color: #1c1c97;
+  font-size: 12px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  margin-top: 8px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 600px) {
+  .team-member {
+    flex-direction: column;
+    text-align: center;
+  }
+  .team-member img {
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
 }
