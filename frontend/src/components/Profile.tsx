@@ -131,7 +131,14 @@ function Profile() {
       return;
     }
 
+    
     setSubmitMsg("Artwork created 🎉");
+
+    // sakrij poruku nakon 5 sekundi
+    setTimeout(() => {
+      setSubmitMsg("");
+    }, 5000);
+    
     setShowForm(false);
     setNaziv("");
     setOpis("");
