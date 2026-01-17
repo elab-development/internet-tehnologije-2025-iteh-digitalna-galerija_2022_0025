@@ -2,12 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Profile.css";
 
-<<<<<<< HEAD
-type Category = { id: number; name: string; };
-type Image = { id: number; title: string; file_path: string; };
-type Artwork = { id: number; naziv: string; opis: string; category?: Category; images?: Image[]; };
-type User = { id: number; name: string; };
-=======
 type Category = {
   id: number;
   name: string;
@@ -31,7 +25,6 @@ type User = {
   id: number;
   name: string;
 };
->>>>>>> f88e328 (Izmene u ArtworkController, Artwork modelu i frontend komponentama)
 
 function Profile() {
   const navigate = useNavigate();
@@ -158,21 +151,13 @@ function Profile() {
       headers: { Authorization: `Bearer ${token}` },
       body: formData,
     });
-
-<<<<<<< HEAD
-    if (res.ok) {
-      setSubmitMsg(editingArtworkId ? "Updated 🎉" : "Created 🎉");
-      setTimeout(() => setSubmitMsg(""), 5000);
-      cancelAction();
-      if (user) fetchArtworks(user.id);
-=======
     if (!res.ok) {
       setSubmitMsg("Greška pri kreiranju rada");
       return;
     }
 
     
-    setSubmitMsg("Rad je kreiran 🎉");
+    setSubmitMsg("Rad je kreiran ");
 
     // sakrij poruku nakon 5 sekundi
     setTimeout(() => {
@@ -183,11 +168,11 @@ function Profile() {
     setNaziv("");
     setOpis("");
     setCategoryId("");
-    setImages([]);
+    setNewFiles([]);
+    setNewPreviews([]);
 
     if (user) {
       fetchArtworks(user.id); // refresh artworks nakon kreiranja
->>>>>>> f88e328 (Izmene u ArtworkController, Artwork modelu i frontend komponentama)
     }
   };
 
@@ -261,31 +246,6 @@ function Profile() {
         </button>
       </div>
 
-<<<<<<< HEAD
-      <section className="your-artworks">
-        <h2>Your Artworks</h2>
-        {artworks.length === 0 ? (
-          <p className="no-artworks-msg">No artworks yet. Start creating!</p>
-        ) : (
-          <div className="artwork-grid">
-            {artworks.map((art) => (
-              <div key={art.id} className="artwork-card">
-                <h3>{art.naziv}</h3>
-                <p className="category-tag">{art.category?.name}</p>
-                <p className="description">{art.opis}</p>
-                <div className="artwork-images-preview">
-                  {art.images?.map((img) => (
-                    <img key={img.id} src={`http://localhost:8000/storage/${img.file_path}`} alt="art" 
-                    onClick={() => setPreviewImage(`http://localhost:8000/storage/${img.file_path}`)}/>
-                    
-                  ))}
-                </div>
-                <button className="update-btn" onClick={() => startEdit(art)}>Update artwork</button>
-              </div>
-            ))}
-          </div>
-        )}
-=======
      
       {/* YOUR ARTWORKS */}
     <section className="your-artworks">
@@ -311,7 +271,7 @@ function Profile() {
                     onClick={() => deleteImage(img.id)}
                     title="Obriši sliku"
                   >
-                    ✕
+                    X
                   </button>
                 </div>
               ))}
@@ -325,7 +285,6 @@ function Profile() {
             </div>
           ))}
         </div>
->>>>>>> f88e328 (Izmene u ArtworkController, Artwork modelu i frontend komponentama)
       </section>
 
       {/* MODALNI PROZOR - POTPUNO IZMEXTEN VAN SVEGA */}
@@ -354,12 +313,13 @@ function Profile() {
                 <label>Gallery Management:</label>
                 <div className="edit-images-grid">
                   {currentImages.map(img => (
-                    <div key={img.id} className={`edit-image-item ${imagesToDelete.includes(img.id) ? 'marked-delete' : ''}`}>
+                    <div key={img.id} className={`edit-image-item ${imagesToDelete.includes(Number(img.id)) ? 'marked-delete' : ''}`}>
                       <img src={`http://localhost:8000/storage/${img.file_path}`} alt="old" />
                       <button type="button" className="img-action-btn" onClick={() => {
-                          setImagesToDelete(prev => prev.includes(img.id) ? prev.filter(i => i !== img.id) : [...prev, img.id]);
+                          const id = Number(img.id);
+                          setImagesToDelete(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
                       }}>
-                        {imagesToDelete.includes(img.id) ? "↺" : "✕"}
+                        {imagesToDelete.includes(Number(img.id)) ? "Vrati" : "Obriši"}
                       </button>
                     </div>
                   ))}
@@ -367,12 +327,12 @@ function Profile() {
                   {newPreviews.map((url, index) => (
                     <div key={index} className="edit-image-item new-preview">
                       <img src={url} alt="new-preview" />
-                      <button type="button" className="img-action-btn delete" onClick={() => removeNewImage(index)}>✕</button>
+                      <button type="button" className="img-action-btn delete" onClick={() => removeNewImage(index)}>X</button>
                     </div>
                   ))}
                   
                   <label className="add-image-placeholder">
-                    <span>+</span>
+                    <span>Add</span>
                     <input type="file" multiple onChange={handleFileSelect} hidden />
                   </label>
                 </div>
@@ -387,15 +347,15 @@ function Profile() {
         </div>
       )}
       {previewImage && (
-      <div className="image-preview-overlay" onClick={() => setPreviewImage(null)}>
-        <img
-          src={previewImage}
-          alt="Preview"
-          className="image-preview-full"
-          onClick={(e) => e.stopPropagation()}
-        />
-      </div>
-    )}
+        <div className="image-preview-overlay" onClick={() => setPreviewImage(null)}>
+          <img
+            src={previewImage}
+            alt="Preview"
+            className="image-preview-full"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
     </div>
   );
 }
