@@ -158,4 +158,24 @@ class ArtworkController extends Controller
 
         return response()->json(['message' => 'Artwork deleted']);
     }
+
+    public function destroyImage(Request $request, Image $image)
+{
+    // 1. Provera vlasnika
+    if ($image->user_id !== $request->user()->id) {
+        return response()->json(['error' => 'Forbidden'], 403);
+    }
+
+    // 2. Brisanje fajla sa storage-a
+    if ($image->file_path && Storage::disk('public')->exists($image->file_path)) {
+        Storage::disk('public')->delete($image->file_path);
+    }
+
+    // 3. Brisanje zapisa iz baze
+    $image->delete();
+
+    // 4. Povratna poruka
+    return response()->json(['message' => 'Image deleted successfully']);
+}
+
 }

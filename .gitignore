@@ -10,5 +10,7 @@ build/
 # Environment files
 .env
 
+/backend/vendor/
+
 # VSCode
 .vscode/

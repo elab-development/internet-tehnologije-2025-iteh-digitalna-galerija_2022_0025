@@ -30,6 +30,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     
     Route::get('/user', [UserController::class, 'getUser']);
+
+    
 });
 
 
