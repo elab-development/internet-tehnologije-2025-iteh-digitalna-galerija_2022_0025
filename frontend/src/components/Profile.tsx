@@ -198,7 +198,7 @@ function Profile() {
           <div key={art.id} className="artwork-card">
             <h3>{art.naziv}</h3>
             <p className="category">{art.category?.name}</p>
-
+            <p className="description">{art.opis}</p>
             <div className="artwork-images">
               {art.images?.map((img) => (
                 <img
