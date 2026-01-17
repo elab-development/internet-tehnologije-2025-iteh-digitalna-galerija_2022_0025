@@ -14,15 +14,12 @@ class ArtworkController extends Controller
     // GET /api/artworks
     public function index(Request $request)
 {
-    $perPage = (int) $request->query('per_page', 10);
+    $perPage = (int) $request->query('per_page', 100);
     $perPage = max(1, min(100, $perPage));
 
     $query = Artwork::with(['category', 'images']);
 
-    // ako je ulogovan → vidi samo svoje
-    if ($request->user()) {
-        $query->where('user_id', $request->user()->id);
-    }
+   
 
     // ako NIJE ulogovan → vidi sve (ili samo public)
     // ili možeš npr.:
