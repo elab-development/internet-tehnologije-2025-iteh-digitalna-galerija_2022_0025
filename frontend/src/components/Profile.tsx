@@ -2,36 +2,11 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Profile.css";
 
-<<<<<<< HEAD
+// Tipovi podataka
 type Category = { id: number; name: string; };
 type Image = { id: number; title: string; file_path: string; };
 type Artwork = { id: number; naziv: string; opis: string; category?: Category; images?: Image[]; };
 type User = { id: number; name: string; };
-=======
-type Category = {
-  id: number;
-  name: string;
-};
-
-type Image = {
-  id: number | string;
-  title: string;
-  file_path: string;
-};
-
-type Artwork = {
-  id: number;
-  naziv: string;
-  opis: string;
-  category?: Category;
-  images?: Image[];
-};
-
-type User = {
-  id: number;
-  name: string;
-};
->>>>>>> f88e328 (Izmene u ArtworkController, Artwork modelu i frontend komponentama)
 
 function Profile() {
   const navigate = useNavigate();
@@ -170,63 +145,13 @@ function Profile() {
       body: formData,
     });
 
-<<<<<<< HEAD
     if (res.ok) {
-      setSubmitMsg(editingArtworkId ? "Updated 🎉" : "Created 🎉");
-      setTimeout(() => setSubmitMsg(""), 5000);
+      setSubmitMsg(editingArtworkId ? "Artwork updated 🎉" : "Artwork created 🎉");
       cancelAction();
       if (user) fetchArtworks(user.id);
-=======
-    if (!res.ok) {
-      setSubmitMsg("Greška pri kreiranju rada");
-      return;
-    }
-
-    
-    setSubmitMsg("Rad je kreiran 🎉");
-
-    // sakrij poruku nakon 5 sekundi
-    setTimeout(() => {
-      setSubmitMsg("");
-    }, 5000);
-    
-    setShowForm(false);
-    setNaziv("");
-    setOpis("");
-    setCategoryId("");
-    setImages([]);
-
-    if (user) {
-      fetchArtworks(user.id); // refresh artworks nakon kreiranja
->>>>>>> f88e328 (Izmene u ArtworkController, Artwork modelu i frontend komponentama)
-    }
-  };
-
-  const deleteImage = async (imageId: number | string) => {
-    const token = localStorage.getItem("auth_token");
-    if (!token) return;
-
-    if (!window.confirm("Da li ste sigurni da želite da obrišete ovu sliku?")) {
-      return;
-    }
-
-    const res = await fetch(`http://localhost:8000/api/images/${imageId}`, {
-      method: "DELETE",
-      headers: { Authorization: `Bearer ${token}` },
-    });
-
-    if (!res.ok) {
-      setSubmitMsg("Greška pri brisanju slike");
-      return;
-    }
-
-    setSubmitMsg("Slika je uspešno obrisana");
-    setTimeout(() => {
-      setSubmitMsg("");
-    }, 3000);
-
-    if (user) {
-      fetchArtworks(user.id);
+      setTimeout(() => setSubmitMsg(""), 5000);
+    } else {
+      setSubmitMsg("Error saving artwork ❌");
     }
   };
 
@@ -260,11 +185,10 @@ function Profile() {
         </button>
       </div>
 
-<<<<<<< HEAD
       <section className="your-artworks">
         <h2>Your Artworks</h2>
         {artworks.length === 0 ? (
-          <p className="no-artworks-msg">No artworks yet. Start creating!</p>
+          <p className="no-artworks-msg" style={{textAlign: 'center'}}>No artworks yet. Start creating!</p>
         ) : (
           <div className="artwork-grid">
             {artworks.map((art) => (
@@ -272,59 +196,26 @@ function Profile() {
                 <h3>{art.naziv}</h3>
                 <p className="category-tag">{art.category?.name}</p>
                 <p className="description">{art.opis}</p>
+                
                 <div className="artwork-images-preview">
                   {art.images?.map((img) => (
-                    <img key={img.id} src={`http://localhost:8000/storage/${img.file_path}`} alt="art" 
-                    onClick={() => setPreviewImage(`http://localhost:8000/storage/${img.file_path}`)}/>
-                    
+                    <img 
+                      key={img.id} 
+                      src={`http://localhost:8000/storage/${img.file_path}`} 
+                      alt="art" 
+                      onClick={() => setPreviewImage(`http://localhost:8000/storage/${img.file_path}`)}
+                    />
                   ))}
                 </div>
-                <button className="update-btn" onClick={() => startEdit(art)}>Update artwork</button>
+
+                <div className="card-footer-actions">
+                    <button className="update-btn" onClick={() => startEdit(art)}>Edit</button>
+                    <button className="delete-artwork-btn" onClick={() => deleteArtwork(art.id)}>Delete</button>
+                </div>
               </div>
             ))}
           </div>
         )}
-=======
-     
-      {/* YOUR ARTWORKS */}
-    <section className="your-artworks">
-      <h2>Vaši radovi</h2>
-
-      {artworks.length === 0 && <p>Nema radova još.</p>}
-
-      <div className="artwork-grid">
-        {artworks.map((art) => (
-          <div key={art.id} className="artwork-card">
-            <h3>{art.naziv}</h3>
-            <p className="category">{art.category?.name}</p>
-            <p className="description">{art.opis}</p>
-            <div className="artwork-images">
-              {art.images?.map((img) => (
-                <div key={img.id} className="image-container">
-                  <img
-                    src={`http://localhost:8000/storage/${img.file_path}`}
-                    alt={art.naziv}
-                  />
-                  <button
-                    className="delete-image-btn"
-                    onClick={() => deleteImage(img.id)}
-                    title="Obriši sliku"
-                  >
-                    ✕
-                  </button>
-                </div>
-              ))}
-              </div>
-            <button
-              className="delete-artwork-btn"
-              onClick={() => deleteArtwork(art.id)}
-            >
-              Obriši rad
-            </button>
-            </div>
-          ))}
-        </div>
->>>>>>> f88e328 (Izmene u ArtworkController, Artwork modelu i frontend komponentama)
       </section>
 
       {/* MODAL FOR NEW/EDIT ARTWORK */}
@@ -354,12 +245,11 @@ function Profile() {
                 <div className="edit-images-grid">
                   {currentImages.map(img => (
                     <div key={img.id} className={`edit-image-item ${imagesToDelete.includes(img.id) ? 'marked-delete' : ''}`}>
-                      <img src={`http://localhost:8000/storage/${img.file_path}`} alt="old" />
+                      <img src={`http://localhost:8000/storage/${img.file_path}`} alt="existing" />
                       <button type="button" className="img-action-btn" onClick={() => {
-                          const id = Number(img.id);
-                          setImagesToDelete(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
+                          setImagesToDelete(prev => prev.includes(img.id) ? prev.filter(i => i !== img.id) : [...prev, img.id]);
                       }}>
-                        {imagesToDelete.includes(Number(img.id)) ? "Vrati" : "Obriši"}
+                        {imagesToDelete.includes(img.id) ? "↺" : "✕"}
                       </button>
                     </div>
                   ))}
@@ -367,12 +257,12 @@ function Profile() {
                   {newPreviews.map((url, index) => (
                     <div key={index} className="edit-image-item new-preview">
                       <img src={url} alt="new-preview" />
-                      <button type="button" className="img-action-btn delete" onClick={() => removeNewImage(index)}>✕</button>
+                      <button type="button" className="img-action-btn" onClick={() => removeNewImage(index)}>✕</button>
                     </div>
                   ))}
                   
                   <label className="add-image-placeholder">
-                    <span>Add</span>
+                    <span>+</span>
                     <input type="file" multiple onChange={handleFileSelect} hidden />
                   </label>
                 </div>
