@@ -16,10 +16,8 @@ function Profile() {
   const [opis, setOpis] = useState("");
   const [categoryId, setCategoryId] = useState<number | "">("");
 
-  // NOVO: Razdvojeni fajlovi i njihovi preview URL-ovi radi lakšeg brisanja
   const [newFiles, setNewFiles] = useState<File[]>([]);
   const [newPreviews, setNewPreviews] = useState<string[]>([]);
-  
   const [currentImages, setCurrentImages] = useState<Image[]>([]);
   const [imagesToDelete, setImagesToDelete] = useState<number[]>([]);
 
@@ -76,18 +74,15 @@ function Profile() {
     navigate("/login");
   };
 
-  // Dodavanje novih slika (kumulativno)
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const selectedFiles = Array.from(e.target.files);
       setNewFiles(prev => [...prev, ...selectedFiles]);
-
       const urls = selectedFiles.map(file => URL.createObjectURL(file));
       setNewPreviews(prev => [...prev, ...urls]);
     }
   };
 
-  // Uklanjanje NOVE slike pre uploada
   const removeNewImage = (index: number) => {
     setNewFiles(prev => prev.filter((_, i) => i !== index));
     setNewPreviews(prev => prev.filter((_, i) => i !== index));
@@ -103,7 +98,6 @@ function Profile() {
     setNewFiles([]);
     setNewPreviews([]);
     setShowForm(true);
-    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const cancelAction = () => {
@@ -123,8 +117,6 @@ function Profile() {
     formData.append("naziv", naziv);
     formData.append("opis", opis || "");
     formData.append("category_id", String(categoryId));
-    
-    // Šaljemo samo preostale nove fajlove
     newFiles.forEach((f) => formData.append("images[]", f));
 
     let url = "http://localhost:8000/api/artworks";
@@ -149,78 +141,31 @@ function Profile() {
   };
 
   return (
-    <>
+    <div className="profile-page">
       <div className="profile-header">
-        <h2>Welcome {user?.name}</h2>
+        <h2>Welcome, {user?.name}</h2>
         <button className="logout-btn" onClick={logout}>Logout</button>
       </div>
 
-      <div className="container" style={{ margin: '0 auto' }}>
+      <div className="action-section">
         {submitMsg && <div className="submit-msg">{submitMsg}</div>}
-
-        <button className="create-btn" onClick={editingArtworkId ? cancelAction : () => setShowForm(!showForm)}>
-          {showForm ? "Cancel" : "Create artwork"}
+        <button className="create-btn" onClick={() => setShowForm(true)}>
+          Create artwork
         </button>
-
-        {showForm && (
-          <form className="artwork-form" onSubmit={handleSaveArtwork}>
-            <h3>{editingArtworkId ? "Update Artwork" : "New Artwork"}</h3>
-            <input type="text" placeholder="Name" value={naziv} onChange={(e) => setNaziv(e.target.value)} required />
-            <textarea placeholder="Description" value={opis} onChange={(e) => setOpis(e.target.value)} />
-            <select value={categoryId} onChange={(e) => setCategoryId(Number(e.target.value))} required>
-              <option value="" disabled hidden>Select category</option>
-              {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
-            </select>
-
-            <div className="manage-images">
-              <p>Artwork Gallery:</p>
-              <div className="edit-images-grid">
-                {/* STARE SLIKE IZ BAZE */}
-                {currentImages.map(img => (
-                  <div key={img.id} className={`edit-image-item ${imagesToDelete.includes(img.id) ? 'to-delete' : ''}`}>
-                    <img src={`http://localhost:8000/storage/${img.file_path}`} alt="old" />
-                    <button type="button" className="x-btn" onClick={() => {
-                        setImagesToDelete(prev => prev.includes(img.id) ? prev.filter(i => i !== img.id) : [...prev, img.id]);
-                    }}>
-                      {imagesToDelete.includes(img.id) ? "↺" : "✕"}
-                    </button>
-                  </div>
-                ))}
-
-                {/* NOVE IZABRANE SLIKE */}
-                {newPreviews.map((url, index) => (
-                  <div key={index} className="edit-image-item new-preview">
-                    <img src={url} alt="new-preview" />
-                    <button type="button" className="x-btn" onClick={() => removeNewImage(index)}>✕</button>
-                  </div>
-                ))}
-                
-                {/* DUGME ZA DODAVANJE UNUTAR GRID-A (Opciono, ili ostavi klasičan input ispod) */}
-                <label className="add-more-box">
-                  +
-                  <input type="file" multiple onChange={handleFileSelect} hidden />
-                </label>
-              </div>
-            </div>
-
-            <button type="submit" className="save-btn">{editingArtworkId ? "Update" : "Save"}</button>
-          </form>
-        )}
       </div>
 
       <section className="your-artworks">
-        <h2>Your artworks</h2>
-        
-        {/* DODATA PROVERA ZA PRAZAN NIZ */}
+        <h2>Your Artworks</h2>
         {artworks.length === 0 ? (
-          <p className="no-artworks-msg">No artworks yet.</p>
+          <p className="no-artworks-msg">No artworks yet. Start creating!</p>
         ) : (
           <div className="artwork-grid">
             {artworks.map((art) => (
               <div key={art.id} className="artwork-card">
                 <h3>{art.naziv}</h3>
-                <p className="category">{art.category?.name}</p>
-                <div className="artwork-images">
+                <p className="category-tag">{art.category?.name}</p>
+                <p className="description">{art.opis}</p>
+                <div className="artwork-images-preview">
                   {art.images?.map((img) => (
                     <img key={img.id} src={`http://localhost:8000/storage/${img.file_path}`} alt="art" />
                   ))}
@@ -231,7 +176,66 @@ function Profile() {
           </div>
         )}
       </section>
-    </>
+
+      {/* MODALNI PROZOR - POTPUNO IZMEXTEN VAN SVEGA */}
+      {showForm && (
+        <div className="modal-overlay" onClick={cancelAction}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <form className="artwork-form" onSubmit={handleSaveArtwork}>
+              <h3>{editingArtworkId ? "Edit Artwork" : "New Artwork"}</h3>
+              
+              <div className="input-group">
+                <input type="text" placeholder="Name of artwork" value={naziv} onChange={(e) => setNaziv(e.target.value)} required />
+              </div>
+
+              <div className="input-group">
+                <textarea placeholder="Tell a story about this piece..." value={opis} onChange={(e) => setOpis(e.target.value)} />
+              </div>
+
+              <div className="input-group">
+                <select value={categoryId} onChange={(e) => setCategoryId(Number(e.target.value))} required>
+                  <option value="" disabled hidden>Select category</option>
+                  {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+                </select>
+              </div>
+
+              <div className="manage-images-section">
+                <label>Gallery Management:</label>
+                <div className="edit-images-grid">
+                  {currentImages.map(img => (
+                    <div key={img.id} className={`edit-image-item ${imagesToDelete.includes(img.id) ? 'marked-delete' : ''}`}>
+                      <img src={`http://localhost:8000/storage/${img.file_path}`} alt="old" />
+                      <button type="button" className="img-action-btn" onClick={() => {
+                          setImagesToDelete(prev => prev.includes(img.id) ? prev.filter(i => i !== img.id) : [...prev, img.id]);
+                      }}>
+                        {imagesToDelete.includes(img.id) ? "↺" : "✕"}
+                      </button>
+                    </div>
+                  ))}
+
+                  {newPreviews.map((url, index) => (
+                    <div key={index} className="edit-image-item new-preview">
+                      <img src={url} alt="new-preview" />
+                      <button type="button" className="img-action-btn delete" onClick={() => removeNewImage(index)}>✕</button>
+                    </div>
+                  ))}
+                  
+                  <label className="add-image-placeholder">
+                    <span>+</span>
+                    <input type="file" multiple onChange={handleFileSelect} hidden />
+                  </label>
+                </div>
+              </div>
+
+              <div className="form-actions">
+                <button type="button" className="cancel-btn" onClick={cancelAction}>Close</button>
+                <button type="submit" className="save-btn">{editingArtworkId ? "Update Artwork" : "Save Artwork"}</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 
