@@ -20,6 +20,7 @@ const Gallery: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [currentPage, setCurrentPage] = useState(1);
+  
 
   const perPage = 8; // fiksno 8 po stranici
 
@@ -41,17 +42,13 @@ const Gallery: React.FC = () => {
     setCategories(data);
   };
 
-  // Fetch artworks
-  const fetchArtworks = async () => {
-    const token = localStorage.getItem("auth_token");
-    if (!token) return;
-
-    const res = await fetch("http://localhost:8000/api/artworks", {
-      headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
-    });
+  // Fetch artworks (javno)
+    const fetchArtworks = async () => {
+    const res = await fetch("http://localhost:8000/api/artworks");
+    if (!res.ok) return;
     const data = await res.json();
-    setArtworks(data.data || []);
-  };
+    setArtworks(data.data || []); // Laravel paginate
+    };
 
   // Pagination change
   const handlePageChange = (_: any, value: number) => {

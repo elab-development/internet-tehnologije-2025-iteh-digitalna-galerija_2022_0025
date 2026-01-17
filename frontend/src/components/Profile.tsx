@@ -88,13 +88,20 @@ function Profile() {
 
   const logout = async () => {
     const token = localStorage.getItem("auth_token");
-    await fetch("http://localhost:8000/api/logout", {
-      method: "POST",
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    if (token) {
+      await fetch("http://localhost:8000/api/logout", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+    }
     localStorage.removeItem("auth_token");
+    setUser(null); // očisti lokalni state
+    // emituje događaj da App.tsx zna
+    window.dispatchEvent(new Event('authChange'));
     navigate("/login");
   };
+
+
 
   const handleImagesChange = (files: FileList | null) => {
     if (!files) return;
