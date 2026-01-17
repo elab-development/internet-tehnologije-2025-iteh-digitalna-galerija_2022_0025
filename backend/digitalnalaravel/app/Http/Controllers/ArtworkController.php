@@ -95,38 +95,49 @@ class ArtworkController extends Controller
 
     // PUT/PATCH /api/artworks/{artwork}
     public function update(Request $request, Artwork $artwork)
-{
-    // ... validacija i provera vlasništva ostaju isti ...
-
-    // 1. Ažuriraj tekstualne podatke
-    $artwork->update($request->only(['naziv', 'opis', 'category_id']));
-
-    // 2. Brisanje samo određenih slika (ako korisnik klikne na X)
-    if ($request->has('delete_images')) {
-        $idsToDelete = $request->input('delete_images'); // Niz ID-jeva slika
-        $imagesToDelete = Image::whereIn('id', $idsToDelete)->where('artwork_id', $artwork->id)->get();
-        
-        foreach ($imagesToDelete as $oldImage) {
-            Storage::disk('public')->delete($oldImage->file_path);
-            $oldImage->delete();
+    {
+        if ($artwork->user_id !== $request->user()->id) {
+            return response()->json(['error' => 'Forbidden'], 403);
         }
-    }
 
-    // 3. Dodavanje novih slika (bez brisanja preostalih starih)
-    if ($request->hasFile('images')) {
-        foreach ($request->file('images') as $file) {
-            $path = $file->store('images', 'public');
-            $artwork->images()->create([
-                'title' => $file->getClientOriginalName(),
-                'file_path' => $path,
-                'category_id' => $artwork->category_id,
-                'user_id' => $request->user()->id,
-            ]);
+        // validacija
+        $request->validate([
+            'naziv' => 'sometimes|required|string|max:255',
+            'opis' => 'nullable|string',
+            'category_id' => 'sometimes|required|exists:categories,id',
+            'images' => 'nullable|array',
+            'images.*' => 'image|mimes:jpg,jpeg,png,gif,webp|max:5120',
+        ]);
+
+        // 1. Ažuriraj tekstualne podatke
+        $artwork->update($request->only(['naziv', 'opis', 'category_id']));
+
+        // 2. Brisanje samo određenih slika (ako korisnik klikne na X)
+        if ($request->has('delete_images')) {
+            $idsToDelete = $request->input('delete_images'); // Niz ID-jeva slika
+            $imagesToDelete = Image::whereIn('id', $idsToDelete)->where('artwork_id', $artwork->id)->get();
+            
+            foreach ($imagesToDelete as $oldImage) {
+                Storage::disk('public')->delete($oldImage->file_path);
+                $oldImage->delete();
+            }
         }
-    }
 
-    return response()->json(['artwork' => $artwork->load('images')]);
-}
+        // 3. Dodavanje novih slika (bez brisanja preostalih starih)
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $file) {
+                $path = $file->store('images', 'public');
+                $artwork->images()->create([
+                    'title' => $file->getClientOriginalName(),
+                    'file_path' => $path,
+                    'category_id' => $artwork->category_id,
+                    'user_id' => $request->user()->id,
+                ]);
+            }
+        }
+
+        return response()->json(['artwork' => $artwork->load('images')]);
+    }
 
 
 

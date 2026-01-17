@@ -168,7 +168,7 @@ function Profile() {
             <input type="text" placeholder="Name" value={naziv} onChange={(e) => setNaziv(e.target.value)} required />
             <textarea placeholder="Description" value={opis} onChange={(e) => setOpis(e.target.value)} />
             <select value={categoryId} onChange={(e) => setCategoryId(Number(e.target.value))} required>
-              <option value="">Select category</option>
+              <option value="" disabled hidden>Select category</option>
               {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
 
@@ -203,27 +203,33 @@ function Profile() {
               </div>
             </div>
 
-            <button type="submit" className="save-btn">{editingArtworkId ? "Update Artwork" : "Save"}</button>
+            <button type="submit" className="save-btn">{editingArtworkId ? "Update" : "Save"}</button>
           </form>
         )}
       </div>
 
       <section className="your-artworks">
         <h2>Your artworks</h2>
-        <div className="artwork-grid">
-          {artworks.map((art) => (
-            <div key={art.id} className="artwork-card">
-              <h3>{art.naziv}</h3>
-              <p className="category">{art.category?.name}</p>
-              <div className="artwork-images">
-                {art.images?.map((img) => (
-                  <img key={img.id} src={`http://localhost:8000/storage/${img.file_path}`} alt="art" />
-                ))}
+        
+        {/* DODATA PROVERA ZA PRAZAN NIZ */}
+        {artworks.length === 0 ? (
+          <p className="no-artworks-msg">No artworks yet.</p>
+        ) : (
+          <div className="artwork-grid">
+            {artworks.map((art) => (
+              <div key={art.id} className="artwork-card">
+                <h3>{art.naziv}</h3>
+                <p className="category">{art.category?.name}</p>
+                <div className="artwork-images">
+                  {art.images?.map((img) => (
+                    <img key={img.id} src={`http://localhost:8000/storage/${img.file_path}`} alt="art" />
+                  ))}
+                </div>
+                <button className="update-btn" onClick={() => startEdit(art)}>Update artwork</button>
               </div>
-              <button className="update-btn" onClick={() => startEdit(art)}>Update artwork</button>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </section>
     </>
   );
