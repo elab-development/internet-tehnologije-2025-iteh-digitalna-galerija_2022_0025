@@ -69,23 +69,27 @@ const Gallery: React.FC = () => {
     <div>
       <h1>Gallery</h1>
 
-      {/* Filter po kategoriji */}
-      <div className="filter-container">
-        <select
-          value={selectedCategory}
-          onChange={(e) => {
-            setSelectedCategory(e.target.value);
-            setCurrentPage(1); // resetuj na prvu stranicu kad filter promeni
-          }}
-        >
-          <option value="">All categories</option>
-          {categories.map((cat) => (
-            <option key={cat.id} value={cat.name}>
-              {cat.name}
-            </option>
-          ))}
-        </select>
-      </div>
+        {/* Filter po kategoriji - Stilizovana padajuća lista */}
+        <div className="gallery-filter-section">
+        <div className="custom-select-wrapper">
+            <select
+            className="modern-select"
+            value={selectedCategory}
+            onChange={(e) => {
+                setSelectedCategory(e.target.value);
+                setCurrentPage(1);
+            }}
+            >
+            <option value="">All Categories</option>
+            {categories.map((cat) => (
+                <option key={cat.id} value={cat.name}>
+                {cat.name}
+                </option>
+            ))}
+            </select>
+            <span className="select-arrow">▼</span>
+        </div>
+        </div>
 
       {/* Grid artworka */}
       <div className="image-grid">

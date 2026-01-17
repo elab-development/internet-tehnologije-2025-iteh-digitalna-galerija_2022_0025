@@ -22,46 +22,69 @@ h2 {
 }
 
 /* =========================
-   FILTER / SELECT
+   MODERN SELECT FILTER
 ========================= */
-.form-control {
-  width: 300px;
-  margin: 20px auto;
+.gallery-filter-section {
+  display: flex;
+  justify-content: center;
+  margin: 30px 0;
 }
 
-.form-control .MuiSelect-root {
-  font-size: 14px;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  padding: 8px;
+.custom-select-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 250px;
+}
+
+.modern-select {
   width: 100%;
-  border-radius: 5px;
-}
-
-.form-control .MuiInputLabel-root {
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #1c1c97;
   background-color: #fff;
-  padding: 0 5px;
+  border: 2px solid #1c1c97;
+  border-radius: 12px;
+  appearance: none; /* Uklanja sistemsku strelicu */
+  cursor: pointer;
+  transition: all 0.3s ease;
+  outline: none;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
-.form-control .MuiMenu-paper {
-  background-color: #fff;
-  color: #333;
-  border: 1px solid #ccc;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+.modern-select:hover {
+  border-color: #e92eae;
+  box-shadow: 0 6px 15px rgba(233, 46, 174, 0.15);
 }
 
-.form-control .MuiMenuItem-root {
-  font-size: 14px;
-  padding: 8px 16px;
+.modern-select:focus {
+  border-color: #e92eae;
 }
 
-.form-control .Mui-selected {
-  background-color: #007bff;
-  color: #fff;
+/* Prilagođena strelica */
+.select-arrow {
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  transform: translateY(-50%);
+  color: #1c1c97;
+  pointer-events: none;
+  font-size: 12px;
 }
 
-.form-control .Mui-selected:hover {
-  background-color: #0056b3;
+/* Dark mode podrška za Select */
+body.dark-mode .modern-select {
+  background-color: #261f1f;
+  color: #007bff;
+  border-color: #007bff;
+}
+
+body.dark-mode .select-arrow {
+  color: #007bff;
+}
+
+body.dark-mode .modern-select:hover {
+  border-color: #ffffff;
 }
 
 /* =========================
