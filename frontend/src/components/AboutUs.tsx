@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './AboutUs.css'; 
-import jana from '../images/ktehjana.jpg';
+import jana from '../images/profilna.jpeg';
 import kristina from '../images/kethkristina.jpg';
 import ema from '../images/ktehema.jpg';
 
