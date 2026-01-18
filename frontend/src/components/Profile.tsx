@@ -259,6 +259,7 @@ function Profile() {
                       }}>
                         {imagesToDelete.includes(img.id) ? "↺" : "✕"}
                       </button>
+
                     </div>
                   ))}
 
@@ -274,6 +275,7 @@ function Profile() {
                     <input type="file" multiple onChange={handleFileSelect} hidden />
                   </label>
                 </div>
+                <small className="form-text">Maximum file size per image: 10 MB.</small>
               </div>
 
               <div className="form-actions">
