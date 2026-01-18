@@ -17,7 +17,7 @@ class ArtworkController extends Controller
     $perPage = (int) $request->query('per_page', 100);
     $perPage = max(1, min(100, $perPage));
 
-    $query = Artwork::with(['category', 'images']);
+    $query = Artwork::with(['category', 'images', 'user']);
 
 
     if ($request->filled('naziv')) {

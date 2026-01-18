@@ -135,6 +135,24 @@ h1 {
   transform: scale(1.03);
 }
 
+/* ARTIST NAME */
+.image-with-artist {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.artist-name {
+  font-size: 13px;
+  color: #666;
+  margin: 0;
+  font-weight: 500;
+}
+
+body.dark-mode .artist-name {
+  color: #aaa;
+}
+
 /* =========================
    PAGINATION
 ========================= */

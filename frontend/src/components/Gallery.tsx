@@ -4,6 +4,7 @@ import Pagination from "@mui/material/Pagination";
 
 type Category = { id: number; name: string };
 type Image = { id: number; file_path: string };
+type User = { id: number; name: string };
 
 type Artwork = {
   id: number;
@@ -11,6 +12,7 @@ type Artwork = {
   opis: string;
   category?: Category;
   images?: Image[];
+  user?: User;
 };
 
 const Gallery: React.FC = () => {
@@ -86,12 +88,14 @@ const Gallery: React.FC = () => {
             
             <div className="artwork-images">
               {art.images?.map((img) => (
-                <img
-                  key={img.id}
-                  src={`http://localhost:8000/storage/${img.file_path}`}
-                  alt={art.naziv}
-                  onClick={() => setPreviewImage(`http://localhost:8000/storage/${img.file_path}`)}
-                />
+                <div key={img.id} className="image-with-artist">
+                  <img
+                    src={`http://localhost:8000/storage/${img.file_path}`}
+                    alt={art.naziv}
+                    onClick={() => setPreviewImage(`http://localhost:8000/storage/${img.file_path}`)}
+                  />
+                  <p className="artist-name">{art.user?.name}</p>
+                </div>
               ))}
             </div>
           </div>
