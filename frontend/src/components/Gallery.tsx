@@ -82,7 +82,8 @@ const Gallery: React.FC = () => {
       <div className="image-grid">
         {artworksToShow.map((art) => (
           <div key={art.id} className="artwork-card">
-            <h3>{art.naziv}</h3>
+            <h2>{art.naziv}</h2>
+            
             <p className="category-tag">{art.category?.name}</p>
             <p className="description">{art.opis}</p>
             
@@ -94,10 +95,11 @@ const Gallery: React.FC = () => {
                     alt={art.naziv}
                     onClick={() => setPreviewImage(`http://localhost:8000/storage/${img.file_path}`)}
                   />
-                  <p className="artist-name">{art.user?.name}</p>
+                  
                 </div>
               ))}
             </div>
+            <h3>{art.user?.name}</h3>
           </div>
         ))}
       </div>

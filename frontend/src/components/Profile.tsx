@@ -201,7 +201,7 @@ function Profile() {
           <div className="artwork-grid">
             {artworks.map((art) => (
               <div key={art.id} className="artwork-card">
-                <h3>{art.naziv}</h3>
+                <h2>{art.naziv}</h2>
                 <p className="category-tag">{art.category?.name}</p>
                 <p className="description">{art.opis}</p>
                 
@@ -217,8 +217,8 @@ function Profile() {
                 </div>
 
                 <div className="card-footer-actions">
-                    <button className="update-btn" onClick={() => startEdit(art)}>Edit</button>
-                    <button className="delete-artwork-btn" onClick={() => deleteArtwork(art.id)}>Delete</button>
+                    <button className="update-btn" onClick={() => startEdit(art)}>Edit artwork</button>
+                    <button className="delete-artwork-btn" onClick={() => deleteArtwork(art.id)}>Delete artwork</button>
                 </div>
               </div>
             ))}

@@ -106,7 +106,7 @@ class ArtworkController extends Controller
             'opis' => 'nullable|string',
             'category_id' => 'sometimes|required|exists:categories,id',
             'images' => 'nullable|array',
-            'images.*' => 'image|mimes:jpg,jpeg,png,gif,webp|max:5120',
+            'images.*' => 'image|mimes:jpg,jpeg,png,gif,webp|max:10240',
         ]);
 
         // 1. Ažuriraj tekstualne podatke
