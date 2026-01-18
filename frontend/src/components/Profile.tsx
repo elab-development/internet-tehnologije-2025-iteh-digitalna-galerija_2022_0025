@@ -30,6 +30,7 @@ function Profile() {
   const [user, setUser] = useState<User | null>(null);
   const [artworks, setArtworks] = useState<Artwork[]>([]);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [isLoadingArtworks, setIsLoadingArtworks] = useState(false);
 
   // Inicijalno učitavanje
   useEffect(() => {
@@ -62,11 +63,13 @@ function Profile() {
   };
 
   const fetchArtworks = async (userId: number) => {
+    setIsLoadingArtworks(true);
     const token = localStorage.getItem("auth_token");
     const res = await fetch(`http://localhost:8000/api/artworks/${userId}`, {
       headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
     });
     if (res.ok) setArtworks(await res.json());
+    setIsLoadingArtworks(false);
   };
 
   const logout = async () => {
@@ -187,7 +190,12 @@ function Profile() {
 
       <section className="your-artworks">
         <h2>Your Artworks</h2>
-        {artworks.length === 0 ? (
+        {isLoadingArtworks ? (
+          <div className="loading-spinner-container">
+            <div className="loading-spinner"></div>
+            <p>Loading your artworks...</p>
+          </div>
+        ) : artworks.length === 0 ? (
           <p className="no-artworks-msg" style={{textAlign: 'center'}}>No artworks yet. Start creating!</p>
         ) : (
           <div className="artwork-grid">
