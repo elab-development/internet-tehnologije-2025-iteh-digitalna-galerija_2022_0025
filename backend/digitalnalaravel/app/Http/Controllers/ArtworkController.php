@@ -58,7 +58,7 @@ class ArtworkController extends Controller
 
             // slike
             'images' => 'nullable|array',
-            'images.*' => 'image|mimes:jpg,jpeg,png,gif,webp|max:5120',
+            'images.*' => 'image|mimes:jpg,jpeg,png,gif,webp|max:10240',
         ]);
 
         $user = $request->user();
