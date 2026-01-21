@@ -1,3 +1,5 @@
+version: "3.9"
+
 services:
   frontend:
     build: ./frontend
@@ -20,9 +22,23 @@ services:
       - ./backend/digitalnalaravel:/var/www
       - /var/www/vendor
     working_dir: /var/www
-    command: php artisan serve --host=0.0.0.0 --port=8000
     depends_on:
       - db
+    command: >
+      sh -c "
+      if [ ! -f .env ]; then cp .env.example .env; fi &&
+      php artisan key:generate --force &&
+      echo '⏳ Waiting for MySQL...' &&
+      until nc -z db 3306; do
+        sleep 2;
+      done &&
+      echo '✅ MySQL is ready!' &&
+      php artisan migrate --force &&
+      php artisan db:seed --force &&
+      php artisan storage:link &&
+      php artisan serve --host=0.0.0.0 --port=8000
+      "
+
 
   db:
     image: mysql:8.0
