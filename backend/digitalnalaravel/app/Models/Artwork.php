@@ -33,4 +33,9 @@ class Artwork extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
+    public function exhibitions()
+    {
+        return $this->belongsToMany(Exhibition::class, 'artwork_exhibition')->withTimestamps();
+    }
 }

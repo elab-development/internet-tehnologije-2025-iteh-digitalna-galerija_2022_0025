@@ -22,6 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
     ];
 
     /**
@@ -55,5 +56,10 @@ class User extends Authenticatable
     public function images()
     {
         return $this->hasManyThrough(Image::class, Artwork::class);
+    }
+
+    public function exhibitions()
+    {
+        return $this->hasMany(Exhibition::class);
     }
 }

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Gallery.css";
 import Pagination from "@mui/material/Pagination";
 
@@ -15,12 +16,24 @@ type Artwork = {
   user?: User;
 };
 
+type Exhibition = {
+  id: number;
+  name: string;
+  description: string;
+  user: User;
+  artworks: Artwork[];
+  created_at: string;
+};
+
 const Gallery: React.FC = () => {
+  const navigate = useNavigate();
   const [artworks, setArtworks] = useState<Artwork[]>([]);
+  const [exhibitions, setExhibitions] = useState<Exhibition[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [currentPage, setCurrentPage] = useState(1);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<"artworks" | "exhibitions">("artworks");
 
   const perPage = 6;
 
@@ -28,18 +41,45 @@ const Gallery: React.FC = () => {
     document.title = "Gallery";
     fetchCategories();
     fetchArtworks();
+    fetchExhibitions();
   }, []);
 
   const fetchCategories = async () => {
-    const res = await fetch("http://localhost:8000/api/categories");
-    if (res.ok) setCategories(await res.json());
+    try {
+      const res = await fetch("http://localhost:8000/api/categories");
+      if (res.ok) {
+        const data = await res.json();
+        console.log("Categories loaded:", data);
+        setCategories(data);
+      } else {
+        console.error("Failed to fetch categories:", res.status);
+      }
+    } catch (err) {
+      console.error("Error fetching categories:", err);
+    }
   };
 
   const fetchArtworks = async () => {
-    const res = await fetch("http://localhost:8000/api/artworks");
-    if (res.ok) {
-      const data = await res.json();
-      setArtworks(data.data || []);
+    try {
+      const res = await fetch("http://localhost:8000/api/artworks");
+      if (res.ok) {
+        const data = await res.json();
+        console.log("Artworks loaded:", data);
+        setArtworks(data.data || []);
+      } else {
+        console.error("Failed to fetch artworks:", res.status);
+      }
+    } catch (err) {
+      console.error("Error fetching artworks:", err);
+    }
+  };
+
+  const fetchExhibitions = async () => {
+    try {
+      const res = await fetch("http://localhost:8000/api/exhibitions");
+      if (res.ok) setExhibitions(await res.json());
+    } catch (err) {
+      console.error("Greška pri učitavanju izložbi", err);
     }
   };
 
@@ -60,62 +100,137 @@ const Gallery: React.FC = () => {
     <div className="gallery-page">
       <h1>Gallery</h1>
 
-      <div className="gallery-filter-section">
-        <div className="custom-select-wrapper">
-          <select
-            className="modern-select"
-            value={selectedCategory}
-            onChange={(e) => {
-              setSelectedCategory(e.target.value);
-              setCurrentPage(1);
-            }}
-          >
-            <option value="">All Categories</option>
-            {categories.map((cat) => (
-              <option key={cat.id} value={cat.name}>{cat.name}</option>
-            ))}
-          </select>
-          <span className="select-arrow">▼</span>
-        </div>
+      {/* TABS */}
+      <div className="gallery-tabs">
+        <button
+          className={`tab-btn ${activeTab === "artworks" ? "active" : ""}`}
+          onClick={() => {
+            setActiveTab("artworks");
+            setCurrentPage(1);
+          }}
+        >
+          Artworks
+        </button>
+        <button
+          className={`tab-btn ${activeTab === "exhibitions" ? "active" : ""}`}
+          onClick={() => {
+            setActiveTab("exhibitions");
+            setCurrentPage(1);
+          }}
+        >
+          Exhibitions ({exhibitions.length})
+        </button>
       </div>
 
-      <div className="image-grid">
-        {artworksToShow.map((art) => (
-          <div key={art.id} className="artwork-card">
-            <h2>{art.naziv}</h2>
-            
-            <p className="category-tag">{art.category?.name}</p>
-            <p className="description">{art.opis}</p>
-            
-            <div className="artwork-images">
-              {art.images?.map((img) => (
-                <div key={img.id} className="image-with-artist">
-                  <img
-                    src={`http://localhost:8000/storage/${img.file_path}`}
-                    alt={art.naziv}
-                    onClick={() => setPreviewImage(`http://localhost:8000/storage/${img.file_path}`)}
-                  />
-                  
+      {/* ARTWORKS TAB */}
+      {activeTab === "artworks" && (
+        <>
+          <div className="gallery-filter-section">
+            <div className="custom-select-wrapper">
+              <select
+                className="modern-select"
+                value={selectedCategory}
+                onChange={(e) => {
+                  setSelectedCategory(e.target.value);
+                  setCurrentPage(1);
+                }}
+              >
+                <option value="">All Categories</option>
+                {categories.map((cat) => (
+                  <option key={cat.id} value={cat.name}>{cat.name}</option>
+                ))}
+              </select>
+              <span className="select-arrow">▼</span>
+            </div>
+          </div>
+
+          <div className="image-grid">
+            {artworksToShow.map((art) => (
+              <div key={art.id} className="artwork-card">
+                <h2>{art.naziv}</h2>
+                
+                <p className="category-tag">{art.category?.name}</p>
+                <p className="description">{art.opis}</p>
+                
+                <div className="artwork-images">
+                  {art.images?.map((img) => (
+                    <div key={img.id} className="image-with-artist">
+                      <img
+                        src={`http://localhost:8000/storage/${img.file_path}`}
+                        alt={art.naziv}
+                        onClick={() => setPreviewImage(`http://localhost:8000/storage/${img.file_path}`)}
+                      />
+                    </div>
+                  ))}
+                </div>
+                <h3>{art.user?.name}</h3>
+              </div>
+            ))}
+          </div>
+
+          {pageCount > 1 && (
+            <div className="pagination">
+              <Pagination
+                count={pageCount}
+                page={currentPage}
+                onChange={handlePageChange}
+                color="primary"
+              />
+            </div>
+          )}
+        </>
+      )}
+
+      {/* EXHIBITIONS TAB */}
+      {activeTab === "exhibitions" && (
+        <div className="exhibitions-section">
+          {exhibitions.length === 0 ? (
+            <p className="no-data">Nema dostupnih izložbi.</p>
+          ) : (
+            <div className="exhibitions-grid">
+              {exhibitions.map((exhibition) => (
+                <div
+                  key={exhibition.id}
+                  className="exhibition-card-gallery"
+                  onClick={() => navigate(`/exhibitions/${exhibition.id}`)}
+                >
+                  <div className="exhibition-image">
+                    {exhibition.artworks && exhibition.artworks.length > 0 && 
+                     exhibition.artworks[0].images && exhibition.artworks[0].images.length > 0 ? (
+                      <img
+                        src={`http://localhost:8000/storage/${exhibition.artworks[0].images[0].file_path}`}
+                        alt={exhibition.name}
+                      />
+                    ) : (
+                      <div className="exhibition-placeholder">📸</div>
+                    )}
+                  </div>
+                  <div className="exhibition-info-card">
+                    <h3>{exhibition.name}</h3>
+                    <p className="exhibition-author">
+                      od {exhibition.user.name}
+                    </p>
+                    <p className="exhibition-description">{exhibition.description}</p>
+                    <div className="exhibition-meta">
+                      <span className="artworks-count">
+                        {exhibition.artworks.length} dela
+                      </span>
+                      <span className="exhibition-date">
+                        {new Date(exhibition.created_at).toLocaleDateString('sr-RS')}
+                      </span>
+                    </div>
+                    <button className="btn-visit-exhibition">
+                      Poseti izložbu →
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
-            <h3>{art.user?.name}</h3>
-          </div>
-        ))}
-      </div>
-
-      {pageCount > 1 && (
-        <div className="pagination">
-          <Pagination
-            count={pageCount}
-            page={currentPage}
-            onChange={handlePageChange}
-            color="primary"
-          />
+          )}
         </div>
       )}
 
-      {/* FULLSCREEN PREVIEW - Isto kao na profilu */}
+      {/* FULLSCREEN PREVIEW */}
       {previewImage && (
         <div className="image-preview-overlay" onClick={() => setPreviewImage(null)}>
           <img src={previewImage} alt="Full view" className="image-preview-full" />

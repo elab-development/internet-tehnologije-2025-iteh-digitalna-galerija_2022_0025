@@ -11,6 +11,7 @@ import Gallery from "./components/Gallery";
 import AboutUs from "./components/AboutUs";
 import PhotographerPage from "./components/PhotographerPage";
 import Profile from "./components/Profile";
+import ExhibitionDetail from "./components/ExhibitionDetail";
 import './App.css';
 
 import { NavBarPropsI } from "./models/NavBarProps";
@@ -54,6 +55,7 @@ const App: React.FC = () => {
             <Route path="/components/Gallery" element={<Gallery />} />
             <Route path="/components/AboutUs" element={<AboutUs />} />
             <Route path="/photographer/:username" element={<PhotographerPage />} />
+            <Route path="/exhibitions/:id" element={<ExhibitionDetail />} />
           </Routes>
         </div>
         <footer className="footer">

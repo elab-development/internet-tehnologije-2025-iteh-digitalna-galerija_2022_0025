@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Profile.css";
+import ExhibitionForm from "./ExhibitionForm";
+import ExhibitionModal from "./ExhibitionModal";
 
 // Tipovi podataka
-type Category = { id: number; name: string; };
-type Image = { id: number; title: string; file_path: string; };
+type Category = { id: number; naziv: string; };
+type Image = { id: number; file_path?: string; image_path?: string; };
 type Artwork = { id: number; naziv: string; opis: string; category?: Category; images?: Image[]; };
 type User = { id: number; name: string; };
+type Exhibition = { id: number; name: string; description: string; artworks: Artwork[]; };
 
 function Profile() {
   const navigate = useNavigate();
@@ -29,8 +32,14 @@ function Profile() {
   const [submitMsg, setSubmitMsg] = useState("");
   const [user, setUser] = useState<User | null>(null);
   const [artworks, setArtworks] = useState<Artwork[]>([]);
+  const [exhibitions, setExhibitions] = useState<Exhibition[]>([]);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [isLoadingArtworks, setIsLoadingArtworks] = useState(false);
+  
+  // State za Exhibition formu
+  const [showExhibitionForm, setShowExhibitionForm] = useState(false);
+  const [selectedExhibition, setSelectedExhibition] = useState<Exhibition | null>(null);
+  const [showExhibitionModal, setShowExhibitionModal] = useState(false);
 
   // Inicijalno učitavanje
   useEffect(() => {
@@ -42,7 +51,10 @@ function Profile() {
   }, [navigate]);
 
   useEffect(() => { 
-    if (user) fetchArtworks(user.id); 
+    if (user) {
+      fetchArtworks(user.id);
+      fetchUserExhibitions();
+    }
   }, [user]);
 
   // API Pozivi
@@ -72,6 +84,18 @@ function Profile() {
     setIsLoadingArtworks(false);
   };
 
+  const fetchUserExhibitions = async () => {
+    try {
+      const token = localStorage.getItem("auth_token");
+      const res = await fetch("http://localhost:8000/api/exhibitions/user", {
+        headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
+      });
+      if (res.ok) setExhibitions(await res.json());
+    } catch (err) {
+      console.error("Greška pri učitavanju izložbi", err);
+    }
+  };
+
   const logout = async () => {
     const token = localStorage.getItem("auth_token");
     if (token) {
@@ -97,7 +121,7 @@ function Profile() {
   };
 
   const removeNewImage = (index: number) => {
-    URL.revokeObjectURL(newPreviews[index]); // Oslobađanje memorije
+    URL.revokeObjectURL(newPreviews[index]);
     setNewFiles(prev => prev.filter((_, i) => i !== index));
     setNewPreviews(prev => prev.filter((_, i) => i !== index));
   };
@@ -143,7 +167,7 @@ function Profile() {
     }
 
     const res = await fetch(url, {
-      method: "POST", // Laravel zahteva POST + _method: PUT za FormData
+      method: "POST",
       headers: { Authorization: `Bearer ${token}` },
       body: formData,
     });
@@ -174,6 +198,27 @@ function Profile() {
     }
   };
 
+  const deleteExhibition = async (exhibitionId: number) => {
+    const token = localStorage.getItem("auth_token");
+    if (!token || !window.confirm("Sigurni ste da želite da obrišete ovu izložbu?")) return;
+
+    try {
+      const res = await fetch(`http://localhost:8000/api/exhibitions/${exhibitionId}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (res.ok) {
+        setSubmitMsg("Izložba je obrisana");
+        fetchUserExhibitions();
+        setSelectedExhibition(null);
+        setTimeout(() => setSubmitMsg(""), 3000);
+      }
+    } catch (err) {
+      console.error("Greška pri brisanju izložbe", err);
+    }
+  };
+
   return (
     <div className="profile-page">
       <div className="profile-header">
@@ -186,7 +231,31 @@ function Profile() {
         <button className="create-btn" onClick={() => setShowForm(true)}>
           Create artwork
         </button>
+        {artworks.length >= 3 && (
+          <button className="create-exhibition-btn" onClick={() => setShowExhibitionForm(true)}>
+            ✨ Create Your Exhibition
+          </button>
+        )}
       </div>
+
+      {/* EXHIBITIONS SECTION */}
+      {exhibitions.length > 0 && (
+        <section className="your-exhibitions">
+          <h2>Your Exhibitions ({exhibitions.length})</h2>
+          <div className="exhibitions-grid">
+            {exhibitions.map((exhibit) => (
+              <div key={exhibit.id} className="exhibition-card" onClick={() => {
+                setSelectedExhibition(exhibit);
+                setShowExhibitionModal(true);
+              }}>
+                <h3>{exhibit.name}</h3>
+                <p className="exhibition-artworks-count">{exhibit.artworks.length} artworks</p>
+                {exhibit.description && <p className="exhibition-desc">{exhibit.description}</p>}
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       <section className="your-artworks">
         <h2>Your Artworks</h2>
@@ -202,7 +271,7 @@ function Profile() {
             {artworks.map((art) => (
               <div key={art.id} className="artwork-card">
                 <h2>{art.naziv}</h2>
-                <p className="category-tag">{art.category?.name}</p>
+                <p className="category-tag">{art.category?.naziv}</p>
                 <p className="description">{art.opis}</p>
                 
                 <div className="artwork-images-preview">
@@ -244,7 +313,7 @@ function Profile() {
               <div className="input-group">
                 <select value={categoryId} onChange={(e) => setCategoryId(Number(e.target.value))} required>
                   <option value="" disabled hidden>Select category</option>
-                  {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+                  {categories.map((c) => <option key={c.id} value={c.id}>{c.naziv}</option>)}
                 </select>
               </div>
 
@@ -285,6 +354,25 @@ function Profile() {
             </form>
           </div>
         </div>
+      )}
+
+      {/* EXHIBITION FORM MODAL */}
+      <ExhibitionForm
+        isOpen={showExhibitionForm}
+        onClose={() => setShowExhibitionForm(false)}
+        onSuccess={() => fetchUserExhibitions()}
+      />
+
+      {/* EXHIBITION DETAIL MODAL */}
+      {showExhibitionModal && selectedExhibition && (
+        <ExhibitionModal
+          exhibition={selectedExhibition}
+          onClose={() => {
+            setShowExhibitionModal(false);
+            setSelectedExhibition(null);
+          }}
+          onDelete={() => deleteExhibition(selectedExhibition.id)}
+        />
       )}
 
       {/* FULLSCREEN PREVIEW */}
