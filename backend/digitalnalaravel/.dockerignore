@@ -5,3 +5,4 @@ node_modules
 .env.example
 storage/logs/*
 bootstrap/cache/*
+public/storage
