@@ -4,12 +4,40 @@ import "./Profile.css";
 import ExhibitionForm from "./ExhibitionForm";
 import ExhibitionModal from "./ExhibitionModal";
 
-// Tipovi podataka
-type Category = { id: number; naziv: string; };
-type Image = { id: number; file_path?: string; image_path?: string; };
-type Artwork = { id: number; naziv: string; opis: string; category?: Category; images?: Image[]; };
-type User = { id: number; name: string; };
-type Exhibition = { id: number; name: string; description: string; artworks: Artwork[]; };
+// Tipovi podataka - PROMENI Category tip
+
+
+interface Category {
+  id: number;
+  naziv: string;
+  name?: string;
+}
+
+interface Image {
+  id: number;
+  file_path?: string;
+  image_path?: string;
+}
+
+interface Artwork {
+  id: number;
+  naziv: string;
+  opis: string;
+  images?: Image[];
+  category?: Category;
+}
+
+interface Exhibition {
+  id: number;
+  name: string;
+  description: string;
+  artworks: Artwork[];
+}
+
+interface User {
+  id: number;
+  name: string;
+}
 
 function Profile() {
   const navigate = useNavigate();
@@ -57,13 +85,28 @@ function Profile() {
     }
   }, [user]);
 
-  // API Pozivi
+  // API Pozivi - POPRAVI fetchCategories
   const fetchCategories = async () => {
     const token = localStorage.getItem("auth_token");
-    const res = await fetch("http://localhost:8000/api/categories", {
-      headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
-    });
-    if (res.ok) setCategories(await res.json());
+    try {
+      const res = await fetch("http://localhost:8000/api/categories", {
+        headers: { 
+          Authorization: `Bearer ${token}`, 
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+      });
+      
+      if (res.ok) {
+        const data = await res.json();
+        console.log("Categories API response:", data); // Debug log
+        setCategories(data);
+      } else {
+        console.error("Failed to fetch categories:", res.status);
+      }
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
   };
 
   const fetchUser = async () => {
@@ -148,8 +191,16 @@ function Profile() {
     setImagesToDelete([]); setCurrentImages([]);
   };
 
+  // POPRAVI handleSaveArtwork da proveri categoryId
   const handleSaveArtwork = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validacija
+    if (!categoryId) {
+      setSubmitMsg("Please select a category");
+      return;
+    }
+    
     const token = localStorage.getItem("auth_token");
     if (!token) return;
 
@@ -166,6 +217,11 @@ function Profile() {
       imagesToDelete.forEach(id => formData.append("delete_images[]", String(id)));
     }
 
+    console.log("Sending artwork data...");
+    for (let [key, value] of formData.entries()) {
+      console.log(key, value);
+    }
+
     const res = await fetch(url, {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
@@ -178,7 +234,9 @@ function Profile() {
       if (user) fetchArtworks(user.id);
       setTimeout(() => setSubmitMsg(""), 5000);
     } else {
-      setSubmitMsg("Error saving artwork ❌");
+      const errorData = await res.json();
+      console.error("Error response:", errorData);
+      setSubmitMsg(`Error saving artwork: ${errorData.message || 'Unknown error'}`);
     }
   };
 
@@ -233,7 +291,7 @@ function Profile() {
         </button>
         {artworks.length >= 3 && (
           <button className="create-exhibition-btn" onClick={() => setShowExhibitionForm(true)}>
-            ✨ Create Your Exhibition
+            Create Your Exhibition
           </button>
         )}
       </div>
@@ -271,16 +329,16 @@ function Profile() {
             {artworks.map((art) => (
               <div key={art.id} className="artwork-card">
                 <h2>{art.naziv}</h2>
-                <p className="category-tag">{art.category?.naziv}</p>
+                <p className="category-tag">{art.category?.name || art.category?.naziv}</p>
                 <p className="description">{art.opis}</p>
                 
                 <div className="artwork-images-preview">
                   {art.images?.map((img) => (
                     <img 
                       key={img.id} 
-                      src={`http://localhost:8000/storage/${img.file_path}`} 
+                      src={`http://localhost:8000/storage/${img.file_path || img.image_path}`} 
                       alt="art" 
-                      onClick={() => setPreviewImage(`http://localhost:8000/storage/${img.file_path}`)}
+                      onClick={() => setPreviewImage(`http://localhost:8000/storage/${img.file_path || img.image_path}`)}
                     />
                   ))}
                 </div>
@@ -311,9 +369,20 @@ function Profile() {
               </div>
 
               <div className="input-group">
-                <select value={categoryId} onChange={(e) => setCategoryId(Number(e.target.value))} required>
+                <select 
+                  value={categoryId} 
+                  onChange={(e) => {
+                    console.log("Selected category ID:", e.target.value);
+                    setCategoryId(Number(e.target.value));
+                  }} 
+                  required
+                >
                   <option value="" disabled hidden>Select category</option>
-                  {categories.map((c) => <option key={c.id} value={c.id}>{c.naziv}</option>)}
+                  {categories.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name || c.naziv}
+                    </option>
+                  ))}
                 </select>
               </div>
 
@@ -322,13 +391,12 @@ function Profile() {
                 <div className="edit-images-grid">
                   {currentImages.map(img => (
                     <div key={img.id} className={`edit-image-item ${imagesToDelete.includes(img.id) ? 'marked-delete' : ''}`}>
-                      <img src={`http://localhost:8000/storage/${img.file_path}`} alt="existing" />
+                      <img src={`http://localhost:8000/storage/${img.file_path || img.image_path}`} alt="existing" />
                       <button type="button" className="img-action-btn" onClick={() => {
                           setImagesToDelete(prev => prev.includes(img.id) ? prev.filter(i => i !== img.id) : [...prev, img.id]);
                       }}>
                         {imagesToDelete.includes(img.id) ? "↺" : "✕"}
                       </button>
-
                     </div>
                   ))}
 

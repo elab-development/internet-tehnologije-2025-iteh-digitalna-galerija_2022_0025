@@ -30,6 +30,17 @@ class ArtworkController extends Controller
 }
 
 
+    // GET /api/artworks/user -> get current authenticated user's artworks
+    public function userArtworks(Request $request)
+    {
+        // dohvat svih artwork-a za trenutno ulogovanog korisnika
+        $artworks = Artwork::with(['category', 'images'])
+            ->where('user_id', $request->user()->id)
+            ->get();
+
+        return response()->json($artworks);
+    }
+
    
     // GET /api/artworks/{id}  -> id korisnika
     public function show(Request $request, $id)

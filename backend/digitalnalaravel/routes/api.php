@@ -21,6 +21,7 @@ Route::get('exhibitions/{id}', [ExhibitionController::class, 'show']);
 Route::middleware('auth:sanctum')->group(function () {
 
     // Artworks – sve osim index
+    Route::get('artworks/user', [ArtworkController::class, 'userArtworks']);
     Route::get('artworks/{id}', [ArtworkController::class, 'show']);
     Route::post('artworks', [ArtworkController::class, 'store']);
     Route::put('artworks/{artwork}', [ArtworkController::class, 'update']);

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
-    protected $fillable = ['name'];  // Ovo ostaje 'name'
+    protected $fillable = ['name'];
 
     public function artworks() {
         return $this->hasMany(Artwork::class);
@@ -15,13 +15,10 @@ class Category extends Model
     public function images() {
         return $this->hasMany(Image::class);
     }
-
-    public function toArray()
+    
+    // Accessor za naziv (ako frontend treba 'naziv' property)
+    public function getNazivAttribute()
     {
-        return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'naziv' => $this->name, 
-        ];
+        return $this->name;
     }
 }

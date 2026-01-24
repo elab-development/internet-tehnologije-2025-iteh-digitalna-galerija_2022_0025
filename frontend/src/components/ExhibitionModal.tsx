@@ -10,6 +10,7 @@ interface Image {
 interface Category {
   id: number;
   naziv: string;
+  name?: string;
 }
 
 interface Artwork {
@@ -30,7 +31,7 @@ interface Exhibition {
 interface ExhibitionModalProps {
   exhibition: Exhibition;
   onClose: () => void;
-  onDelete: () => void;
+  onDelete: (exhibitionId: number) => void; // PROMENI OVO: dodaj parametar
 }
 
 const ExhibitionModal: React.FC<ExhibitionModalProps> = ({
@@ -38,6 +39,13 @@ const ExhibitionModal: React.FC<ExhibitionModalProps> = ({
   onClose,
   onDelete,
 }) => {
+  const handleDelete = () => {
+    if (window.confirm('Are you sure you want to delete this exhibition?')) {
+      onDelete(exhibition.id); // Sada prima exhibition.id
+      onClose();
+    }
+  };
+
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="exhibition-modal-content" onClick={(e) => e.stopPropagation()}>
@@ -60,11 +68,14 @@ const ExhibitionModal: React.FC<ExhibitionModalProps> = ({
             {exhibition.artworks.map((artwork) => (
               <div key={artwork.id} className="artwork-preview-card">
                 {artwork.images && artwork.images.length > 0 && (
-                  <img src={artwork.images[0].file_path || artwork.images[0].image_path} alt={artwork.naziv} />
+                  <img 
+                    src={`http://localhost:8000/storage/${artwork.images[0].file_path || artwork.images[0].image_path}`} 
+                    alt={artwork.naziv} 
+                  />
                 )}
                 <div className="artwork-details">
                   <h4>{artwork.naziv}</h4>
-                  <p className="category">{artwork.category?.naziv}</p>
+                  <p className="category">{artwork.category?.naziv || artwork.category?.name}</p>
                 </div>
               </div>
             ))}
@@ -72,7 +83,7 @@ const ExhibitionModal: React.FC<ExhibitionModalProps> = ({
         </div>
 
         <div className="modal-footer">
-          <button className="btn-delete" onClick={onDelete}>
+          <button className="btn-delete" onClick={handleDelete}>
             Obriši izložbu
           </button>
           <button className="btn-close" onClick={onClose}>

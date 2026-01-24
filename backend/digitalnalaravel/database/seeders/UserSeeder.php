@@ -10,104 +10,108 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        DB::table('users')->insert([
-            'name' => 'Admin',
-            'email' => 'admin@example.com',
-            'password' => Hash::make('password'),
-            'role' => 'admin',
-        ]);
+        // Prvo proveri da li već postoje korisnici
+        $existingUsers = DB::table('users')->pluck('email')->toArray();
+        
+        // Lista korisnika koje želimo da kreiramo
+        $users = [
+            [
+                'name' => 'Admin',
+                'email' => 'tina@gmail.com', // OVO JE BITNO - TVOJ LOGIN
+                'password' => Hash::make('password123'),
+                'role' => 'admin',
+            ],
+            [
+                'name' => 'Admin',
+                'email' => 'admin@example.com',
+                'password' => Hash::make('password'),
+                'role' => 'admin',
+            ],
+            [
+                'name' => 'User',
+                'email' => 'user@example.com',
+                'password' => Hash::make('password'),
+                'role' => 'user',
+            ],
+            [
+                'name' => 'Guest',
+                'email' => 'guest@example.com',
+                'password' => Hash::make('password'),
+                'role' => 'guest',
+            ],
+            [
+                'name' => 'Emilija',
+                'email' => 'ema@example.com',
+                'password' => Hash::make('sifra456'),
+                'role' => 'guest',
+            ],
+            [
+                'name' => 'Marko',
+                'email' => 'marko@example.com',
+                'password' => Hash::make('marko123'),
+                'role' => 'guest',
+            ],
+            [
+                'name' => 'Nikola',
+                'email' => 'nikola@example.com',
+                'password' => Hash::make('nikola456'),
+                'role' => 'guest',
+            ],
+            [
+                'name' => 'Stefan',
+                'email' => 'stefan@example.com',
+                'password' => Hash::make('stefan789'),
+                'role' => 'guest',
+            ],
+            [
+                'name' => 'Luka',
+                'email' => 'luka@example.com',
+                'password' => Hash::make('luka321'),
+                'role' => 'guest',
+            ],
+            [
+                'name' => 'Ivan',
+                'email' => 'ivan@example.com',
+                'password' => Hash::make('ivan987'),
+                'role' => 'guest',
+            ],
+            [
+                'name' => 'Ana',
+                'email' => 'ana@example.com',
+                'password' => Hash::make('lozinka123'),
+                'role' => 'guest',
+            ],
+            [
+                'name' => 'Milica',
+                'email' => 'milica@example.com',
+                'password' => Hash::make('tajna789'),
+                'role' => 'guest',
+            ],
+            [
+                'name' => 'Jelena',
+                'email' => 'jelena@example.com',
+                'password' => Hash::make('password456'),
+                'role' => 'guest',
+            ],
+            [
+                'name' => 'Ivana',
+                'email' => 'ivana@example.com',
+                'password' => Hash::make('ivana321'),
+                'role' => 'guest',
+            ],
+            [
+                'name' => 'Sara',
+                'email' => 'sara@example.com',
+                'password' => Hash::make('sara987'),
+                'role' => 'guest',
+            ],
+        ];
 
-        DB::table('users')->insert([
-            'name' => 'User',
-            'email' => 'user@example.com',
-            'password' => Hash::make('password'),
-            'role' => 'user',
-        ]);
-
-        DB::table('users')->insert([
-            'name' => 'Guest',
-            'email' => 'guest@example.com',
-            'password' => Hash::make('password'),
-            'role' => 'guest',
-        ]);
-
-        DB::table('users')->insert([
-            'name' => 'Emilija',
-            'email' => 'ema@example.com',
-            'password' => Hash::make('sifra456'),
-            'role' => 'guest',
-        ]);
-
-        DB::table('users')->insert([
-            'name' => 'Marko',
-            'email' => 'marko@example.com',
-            'password' => Hash::make('marko123'),
-            'role' => 'guest',
-        ]);
-
-        DB::table('users')->insert([
-            'name' => 'Nikola',
-            'email' => 'nikola@example.com',
-            'password' => Hash::make('nikola456'),
-            'role' => 'guest',
-        ]);
-
-        DB::table('users')->insert([
-            'name' => 'Stefan',
-            'email' => 'stefan@example.com',
-            'password' => Hash::make('stefan789'),
-            'role' => 'guest',
-        ]);
-
-        DB::table('users')->insert([
-            'name' => 'Luka',
-            'email' => 'luka@example.com',
-            'password' => Hash::make('luka321'),
-            'role' => 'guest',
-        ]);
-
-        DB::table('users')->insert([
-            'name' => 'Ivan',
-            'email' => 'ivan@example.com',
-            'password' => Hash::make('ivan987'),
-            'role' => 'guest',
-        ]);
-
-        DB::table('users')->insert([
-            'name' => 'Ana',
-            'email' => 'ana@example.com',
-            'password' => Hash::make('lozinka123'),
-            'role' => 'guest',
-        ]);
-
-        DB::table('users')->insert([
-            'name' => 'Milica',
-            'email' => 'milica@example.com',
-            'password' => Hash::make('tajna789'),
-            'role' => 'guest',
-        ]);
-
-        DB::table('users')->insert([
-            'name' => 'Jelena',
-            'email' => 'jelena@example.com',
-            'password' => Hash::make('password456'),
-            'role' => 'guest',
-        ]);
-
-        DB::table('users')->insert([
-            'name' => 'Ivana',
-            'email' => 'ivana@example.com',
-            'password' => Hash::make('ivana321'),
-            'role' => 'guest',
-        ]);
-
-        DB::table('users')->insert([
-            'name' => 'Sara',
-            'email' => 'sara@example.com',
-            'password' => Hash::make('sara987'),
-            'role' => 'guest',
-        ]);
-
-
+        // Kreiraj samo korisnike koji već ne postoje
+        foreach ($users as $user) {
+            if (!in_array($user['email'], $existingUsers)) {
+                DB::table('users')->insert($user);
+            }
+        }
     }
 }

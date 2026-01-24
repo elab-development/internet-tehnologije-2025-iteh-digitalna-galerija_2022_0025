@@ -2,7 +2,6 @@
    GLOBAL
 ========================= */
 .profile-page {
-  
   min-height: 100vh;
   padding-bottom: 60px;
 }
@@ -19,67 +18,79 @@
   box-shadow: 0 2px 12px rgba(0,0,0,0.05);
 }
 
-.profile-header h1 {
+.profile-header h2 {
   margin: 0;
+  color: #1c1c97;
+  font-size: 28px;
 }
 
 .logout-btn {
-    max-width: 200px;
   margin-top: 16px;
-  padding: 8px 26px;
-  border: 2px solid #007bff;
+  padding: 10px 30px;
+  border: 2px solid #1c1c97;
   background: transparent;
-  color: #007bff;
+  color: #1c1c97;
   border-radius: 999px;
   font-weight: bold;
   cursor: pointer;
   transition: 0.3s;
+  font-size: 14px;
 }
 
 .logout-btn:hover {
-  background: #007bff;
+  background: #1c1c97;
   color: white;
 }
 
 /* =========================
-   ACTION SECTION
+   ACTION SECTION - IDENTIČNA DUGMAD
 ========================= */
 .action-section {
   display: flex;
   justify-content: center;
-  padding: 40px 0 20px;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding: 40px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
+
+/* OSNOVNI STIL ZA OBA DUGMETA - BEZ IKONICA */
 .create-btn,
 .create-exhibition-btn {
   background-color: #1c1c97;
   color: white;
   border: none;
-  padding: 14px 36px;
-  font-size: 17px;
+  padding: 16px 40px;
+  font-size: 18px;
   font-weight: bold;
   border-radius: 999px;
   cursor: pointer;
-  box-shadow: 0 6px 20px rgba(28,28,151,0.3);
-  transition: 0.3s ease;
-  width: auto;
-  max-width: 200px;
-  min-width: 260px;
+  box-shadow: 0 8px 25px rgba(28, 28, 151, 0.3);
+  transition: all 0.3s ease;
+  min-width: 280px;
+  text-align: center;
 }
 
 .create-exhibition-btn {
-  background: linear-gradient(135deg, #1c1c97, #e92eae);
-  min-width: 200px;
+  background-color: #1c1c97; 
 }
 
+/* HOVER EFEKTI - OBA ISTA */
 .create-btn:hover,
 .create-exhibition-btn:hover {
-  background-color: #e92eae;
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(28, 28, 151, 0.4);
+  background-color: #0d47a1; 
+}
+
+.create-btn:hover {
+  background-color: #0d47a1;
 }
 
 .create-exhibition-btn:hover {
-  background: linear-gradient(135deg, #e92eae, #1c1c97);
+  background: linear-gradient(135deg, #1c1c97, #e92eae);
 }
 
 /* =========================
@@ -95,53 +106,57 @@
   margin: 0 0 30px 0;
   color: #1c1c97;
   font-size: 24px;
+  text-align: center;
 }
 
 .exhibitions-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
   margin-bottom: 40px;
 }
 
 .exhibition-card {
-  background: white;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  border-left: 4px solid #e92eae;
+  padding: 24px;
+  color: white;
   cursor: pointer;
   transition: all 0.3s ease;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  border: none;
 }
 
 .exhibition-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  transform: translateY(-8px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
 }
 
 .exhibition-card h3 {
-  margin: 0 0 10px 0;
-  color: #1c1c97;
-  font-size: 18px;
+  margin: 0 0 12px 0;
+  font-size: 20px;
+  font-weight: 700;
 }
 
 .exhibition-artworks-count {
-  color: #999;
-  font-size: 13px;
-  margin: 0 0 10px 0;
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  margin-bottom: 12px;
 }
 
 .exhibition-desc {
-  color: #666;
-  font-size: 13px;
-  line-height: 1.5;
+  font-size: 14px;
+  opacity: 0.95;
   margin: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  line-height: 1.5;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
-  line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* =========================
@@ -280,6 +295,7 @@
 .your-artworks h2 {
   text-align: center;
   margin-bottom: 36px;
+  color: #333;
 }
 
 .artwork-grid {
@@ -300,7 +316,6 @@
   flex-direction: column;
   transition: 0.3s ease;
   border: 2px solid #000000;
-  
 }
 
 .artwork-card:hover {
@@ -324,7 +339,7 @@
 }
 
 /* =========================
-   IMAGE PREVIEW (KEY PART)
+   IMAGE PREVIEW
 ========================= */
 .artwork-images-preview {
   display: grid;
@@ -341,10 +356,9 @@
   padding: 6px;
   background: transparent;
   border: 1px solid rgba(0,0,0,0.08);
+  cursor: pointer;
+  transition: transform 0.2s;
 }
-
-
-
 
 .artwork-images-preview img:hover {
   transform: scale(1.03);
@@ -353,9 +367,14 @@
 /* =========================
    CARD ACTIONS
 ========================= */
-.update-btn {
+.card-footer-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   margin-top: auto;
-  width: 100%;
+}
+
+.update-btn {
   background: transparent;
   border: 2px solid #1c1c97;
   color: #1c1c97;
@@ -369,6 +388,23 @@
 .update-btn:hover {
   background: #1c1c97;
   color: white;
+}
+
+.delete-artwork-btn {
+  background: transparent;
+  border: 2px solid #dc3545;
+  color: #dc3545;
+  padding: 12px;
+  border-radius: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.delete-artwork-btn:hover {
+  background: #dc3545;
+  color: white;
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.2);
 }
 
 .form-actions {
@@ -401,10 +437,8 @@
    DARK MODE
 ========================= */
 body.dark-mode .profile-page {
-  
   color: #e0e0e0;
 }
-
 
 body.dark-mode .profile-header,
 body.dark-mode .artwork-card,
@@ -414,7 +448,7 @@ body.dark-mode .modal-content {
 
 body.dark-mode .artwork-card {
   background: #1e1e1e;
-  border: 2px solid #ffffff; 
+  border: 2px solid #ffffff;
 }
 
 body.dark-mode .category-tag {
@@ -428,6 +462,17 @@ body.dark-mode .artwork-images-preview img {
 
 body.dark-mode .edit-images-grid {
   background: #252525;
+}
+
+body.dark-mode .delete-artwork-btn {
+  border-color: #ff5f6d;
+  color: #ff5f6d;
+}
+
+body.dark-mode .delete-artwork-btn:hover {
+  background: #ff5f6d;
+  color: #ffffff;
+  box-shadow: 0 4px 15px rgba(255, 95, 109, 0.3);
 }
 
 /* =========================
@@ -463,38 +508,6 @@ body.dark-mode .edit-images-grid {
     transform: scale(1);
     opacity: 1;
   }
-}
-
-.delete-artwork-btn {
-  margin-top: 20px;
-  width: 100%;
-  background: transparent;
-  border: 2px solid #dc3545; /* Crvenkasta boja */
-  color: #dc3545;
-  padding: 10px;
-  border-radius: 14px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.delete-artwork-btn:hover {
-  background: #dc3545;
-  color: white;
-  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.2);
-}
-
-body.dark-mode .delete-artwork-btn {
-  margin-top: 20px;
-  border-color: #ff5f6d; /* Nešto svetlija crvena za bolji kontrast */
-  color: #ff5f6d;
-}
-
-body.dark-mode .delete-artwork-btn:hover {
-
-  background: #ff5f6d;
-  color: #ffffff;
-  box-shadow: 0 4px 15px rgba(255, 95, 109, 0.3);
 }
 
 /* =========================
@@ -539,90 +552,20 @@ body.dark-mode .loading-spinner-container p {
 }
 
 /* =========================
-   EXHIBITIONS SECTION
+   NO ARTWORKS MESSAGE
 ========================= */
-.your-exhibitions {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 30px 20px;
-}
-
-.your-exhibitions h2 {
+.no-artworks-msg {
   text-align: center;
-  margin-bottom: 36px;
-  color: #333;
-}
-
-.exhibitions-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 24px;
-}
-
-.exhibition-card {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #666;
+  font-size: 18px;
+  padding: 60px 20px;
+  background: #f9f9f9;
   border-radius: 12px;
-  padding: 24px;
-  color: white;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-  border: none;
-}
-
-.exhibition-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
-}
-
-.exhibition-card h3 {
-  margin: 0 0 12px 0;
-  font-size: 20px;
-  font-weight: 700;
-}
-
-.exhibition-artworks-count {
-  display: inline-block;
-  background: rgba(255, 255, 255, 0.2);
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 12px;
-  margin-bottom: 12px;
-}
-
-.exhibition-desc {
-  font-size: 14px;
-  opacity: 0.95;
-  margin: 0;
-  line-height: 1.5;
-}
-
-/* =========================
-   CREATE EXHIBITION BUTTON
-========================= */
-.action-section {
-  max-width: 1200px;
+  max-width: 600px;
   margin: 0 auto;
-  padding: 20px;
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  justify-content: center;
 }
 
-.create-exhibition-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 6px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  font-size: 14px;
-}
-
-.create-exhibition-btn:hover {
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-  transform: translateY(-2px);
+body.dark-mode .no-artworks-msg {
+  background: #252525;
+  color: #aaa;
 }
