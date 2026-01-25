@@ -16,29 +16,31 @@ type Statistics = {
 
 function AdminDashboard() {
   const navigate = useNavigate();
+  
+  // PRVO - proveravamo autentifikaciju PRE nego što inicijalizujemo komponente
+  const token = localStorage.getItem("auth_token");
+  const userRole = localStorage.getItem("user_role");
+  
+  // Ako nema autentifikacije, odmah se vraćamo null
+  if (!token || userRole !== "admin") {
+    // Preusmerite u background-u
+    if (!token) {
+      navigate("/login");
+    } else {
+      navigate("/profile");
+    }
+    return null;
+  }
+
+  // Tek sada možemo nastaviti sa komponentom jer smo sigurni da je admin
   const [stats, setStats] = useState<Statistics | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     document.title = "Admin Dashboard";
-    
-    // Proverava prvo da li je korisnik admin
-    const token = localStorage.getItem("auth_token");
-    const userRole = localStorage.getItem("user_role");
-
-    if (!token) {
-      navigate("/login");
-      return;
-    }
-
-    if (userRole !== "admin") {
-      navigate("/profile");
-      return;
-    }
-
     fetchStatistics();
-  }, [navigate]);
+  }, []);
 
   const fetchStatistics = async () => {
     try {
@@ -72,36 +74,15 @@ function AdminDashboard() {
     }
   };
 
-  if (loading) {
+  if (!loading && stats) {
     return (
       <div className="admin-dashboard">
-        <div className="loading-spinner-container">
-          <div className="loading-spinner"></div>
-          <p>Učitavanje...</p>
+        <div className="dashboard-header">
+          <h1>Admin Panel</h1>
+          <p className="timestamp">
+            Ažurirano: {new Date(stats.timestamp).toLocaleString("sr-RS")}
+          </p>
         </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="admin-dashboard">
-        <div className="error-container">
-          <p className="error-msg">{error}</p>
-          <button onClick={() => navigate("/profile")}>Nazad na profil</button>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="admin-dashboard">
-      <div className="dashboard-header">
-        <h1>Admin Panel</h1>
-        <p className="timestamp">
-          Ažurirano: {new Date(stats?.timestamp!).toLocaleString("sr-RS")}
-        </p>
-      </div>
 
       {/* Glavne statistike */}
       <section className="stats-grid">
@@ -109,7 +90,7 @@ function AdminDashboard() {
           <div className="stat-icon">👥</div>
           <div className="stat-content">
             <h3>Ukupno korisnika</h3>
-            <p className="stat-number">{stats?.totalUsers}</p>
+            <p className="stat-number">{stats.totalUsers}</p>
           </div>
         </div>
 
@@ -117,7 +98,7 @@ function AdminDashboard() {
           <div className="stat-icon">⚙️</div>
           <div className="stat-content">
             <h3>Administratori</h3>
-            <p className="stat-number">{stats?.adminUsers}</p>
+            <p className="stat-number">{stats.adminUsers}</p>
           </div>
         </div>
 
@@ -125,7 +106,7 @@ function AdminDashboard() {
           <div className="stat-icon">🎨</div>
           <div className="stat-content">
             <h3>Ukupno dela</h3>
-            <p className="stat-number">{stats?.totalArtworks}</p>
+            <p className="stat-number">{stats.totalArtworks}</p>
           </div>
         </div>
 
@@ -133,7 +114,7 @@ function AdminDashboard() {
           <div className="stat-icon">🖼️</div>
           <div className="stat-content">
             <h3>Ukupno slika</h3>
-            <p className="stat-number">{stats?.totalImages}</p>
+            <p className="stat-number">{stats.totalImages}</p>
           </div>
         </div>
 
@@ -141,7 +122,7 @@ function AdminDashboard() {
           <div className="stat-icon">🎭</div>
           <div className="stat-content">
             <h3>Gostujući korisnici</h3>
-            <p className="stat-number">{stats?.guestUsers}</p>
+            <p className="stat-number">{stats.guestUsers}</p>
           </div>
         </div>
       </section>
@@ -152,7 +133,7 @@ function AdminDashboard() {
         <section className="dashboard-section">
           <h2>🏆 Najpopularnije kategorije</h2>
           <div className="category-list">
-            {stats?.topCategories && stats.topCategories.length > 0 ? (
+            {stats.topCategories && stats.topCategories.length > 0 ? (
               stats.topCategories.map((cat, idx) => (
                 <div key={idx} className="category-item">
                   <div className="category-rank">#{idx + 1}</div>
@@ -184,7 +165,7 @@ function AdminDashboard() {
         <section className="dashboard-section">
           <h2>⭐ Umetnici sa najvećim brojem dela</h2>
           <div className="artists-list">
-            {stats?.topArtists && stats.topArtists.length > 0 ? (
+            {stats.topArtists && stats.topArtists.length > 0 ? (
               stats.topArtists.map((artist, idx) => (
                 <div key={idx} className="artist-item">
                   <div className="artist-rank">#{idx + 1}</div>
@@ -211,7 +192,7 @@ function AdminDashboard() {
             <p>Kategorija</p>
             <p>Broj dela</p>
           </div>
-          {stats?.artworksByCategory && stats.artworksByCategory.length > 0 ? (
+          {stats.artworksByCategory && stats.artworksByCategory.length > 0 ? (
             stats.artworksByCategory.map((cat) => (
               <div key={cat.id} className="table-row">
                 <p>{cat.name}</p>
@@ -223,6 +204,17 @@ function AdminDashboard() {
           )}
         </div>
       </section>
+    </div>
+  );
+  }
+
+  // Ako se učitava ili nema greške
+  return (
+    <div className="admin-dashboard">
+      <div className="loading-spinner-container">
+        <div className="loading-spinner"></div>
+        <p>Učitavanje...</p>
+      </div>
     </div>
   );
 }

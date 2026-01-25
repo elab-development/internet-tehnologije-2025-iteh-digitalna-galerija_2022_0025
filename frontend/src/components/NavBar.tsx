@@ -20,6 +20,12 @@ const NavBar: React.FC<NavBarPropsI> = ({ imageSrcPath, navItems }) => {
             const token = localStorage.getItem("auth_token");
             const role = localStorage.getItem("user_role");
             
+            // Proveravamo BAJS da li postoji token I role je admin
+            if (!token || role !== "admin") {
+                setIsAdmin(false);
+                return;
+            }
+            
             if (token && !role) {
                 console.log("Fetching user to get role...");
                 try {
@@ -52,8 +58,8 @@ const NavBar: React.FC<NavBarPropsI> = ({ imageSrcPath, navItems }) => {
         // Slušaj sve promene u localStorage
         window.addEventListener("storage", fetchUserRoleIfNeeded);
 
-        // Postavi interval za redovnu proveru svakih 1s
-        const interval = setInterval(fetchUserRoleIfNeeded, 1000);
+        // Postavi interval za redovnu proveru svakih 200ms
+        const interval = setInterval(fetchUserRoleIfNeeded, 200);
 
         return () => {
             window.removeEventListener("authChange", fetchUserRoleIfNeeded);
@@ -117,18 +123,22 @@ const NavBar: React.FC<NavBarPropsI> = ({ imageSrcPath, navItems }) => {
                                 </NavLink>
                             </li>
                         ))}
-                        {isAdmin && (
-                            <li className="nav-item">
-                                <NavLink
-                                    to="/admin/dashboard"
-                                    className={({ isActive }) =>
-                                        isActive ? "nav-link active fw-bold admin-link" : "nav-link admin-link"
-                                    }
-                                >
-                                    📊 Admin Panel
-                                </NavLink>
-                            </li>
-                        )}
+                        {(() => {
+                            const token = localStorage.getItem("auth_token");
+                            const role = localStorage.getItem("user_role");
+                            return token && role === "admin" ? (
+                                <li className="nav-item">
+                                    <NavLink
+                                        to="/admin/dashboard"
+                                        className={({ isActive }) =>
+                                            isActive ? "nav-link active fw-bold admin-link" : "nav-link admin-link"
+                                        }
+                                    >
+                                        📊 Admin Panel
+                                    </NavLink>
+                                </li>
+                            ) : null;
+                        })()}
                     </ul>
 
                     {/* Dark mode toggle button */}
