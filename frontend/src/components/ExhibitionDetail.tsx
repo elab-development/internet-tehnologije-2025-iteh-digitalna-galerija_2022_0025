@@ -4,7 +4,7 @@ import '../styles/ExhibitionDetail.css';
 
 interface Image {
   id: number;
-  image_path: string;
+  file_path: string;
 }
 
 interface Category {
@@ -42,6 +42,7 @@ const ExhibitionDetail: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [selectedArtwork, setSelectedArtwork] = useState<Artwork | null>(null);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   useEffect(() => {
     fetchExhibition();
@@ -54,72 +55,69 @@ const ExhibitionDetail: React.FC = () => {
       if (response.ok) {
         setExhibition(await response.json());
       } else {
-        setError('Izložba nije pronađena.');
+        setError('Exhibition not found.');
       }
     } catch (err: any) {
-      setError('Izložba nije pronađena.');
+      setError('Exhibition not found.');
       console.error(err);
     } finally {
       setLoading(false);
     }
   };
 
-  if (loading) return <div className="loading">Učitavam izložbu...</div>;
-  if (error) return <div className="error">{error}</div>;
-  if (!exhibition) return <div className="error">Izložba nije pronađena.</div>;
+  if (loading) return <div className="loading-spinner-container"><div className="loading-spinner"></div><p>Loading exhibition...</p></div>;
+  if (error) return <div className="no-artworks-msg">{error}</div>;
+  if (!exhibition) return <div className="no-artworks-msg">Exhibition not found.</div>;
 
   return (
-    <div className="exhibition-detail">
-      <button className="btn-back" onClick={() => navigate(-1)}>
-        ← Nazad
-      </button>
+    <div className="profile-page">
+      <button className="logout-btn" onClick={() => navigate(-1)}>← Back</button>
 
-      <div className="exhibition-header-detail">
-        <h1>{exhibition.name}</h1>
-        <p className="exhibition-author">
-          Autор: <strong>{exhibition.user.name}</strong>
-        </p>
-        <p className="exhibition-date">
-          Kreirano: {new Date(exhibition.created_at).toLocaleDateString('sr-RS')}
-        </p>
+      <div className="profile-header">
+        <h2>{exhibition.name}</h2>
+        <p>User: <strong>{exhibition.user.name}</strong></p>
+        <p>Created: {new Date(exhibition.created_at).toLocaleDateString('sr-RS')}</p>
       </div>
 
       {exhibition.description && (
-        <div className="exhibition-description-box">
-          <h3>O izložbi</h3>
-          <p>{exhibition.description}</p>
+        <div className="your-exhibitions">
+          <h2>About exhibition</h2>
+          <p className='description'>{exhibition.description}</p>
         </div>
       )}
 
-      <div className="artworks-container">
-        <h2>Dela u izložbi ({exhibition.artworks.length})</h2>
+      <div className="your-artworks">
+        <h2>Artworks in exhibition ({exhibition.artworks.length})</h2>
 
         {exhibition.artworks.length === 0 ? (
-          <p className="no-artworks">Ova izložba nema dela.</p>
+          <div className="no-artworks-msg">This exhibition has no artworks.</div>
         ) : (
-          <div className="artworks-grid">
+          <div className="artwork-grid">
             {exhibition.artworks.map((artwork) => (
               <div
                 key={artwork.id}
-                className={`artwork-card ${
-                  selectedArtwork?.id === artwork.id ? 'selected' : ''
-                }`}
+                className={`artwork-card ${selectedArtwork?.id === artwork.id ? 'selected' : ''}`}
                 onClick={() => setSelectedArtwork(artwork)}
               >
                 {artwork.images && artwork.images.length > 0 && (
-                  <div className="artwork-image">
-                    <img
-                      src={artwork.images[0].image_path}
-                      alt={artwork.naziv}
-                    />
+                  <div className="artwork-images-preview">
+                    {artwork.images.map((image) => (
+                      <img
+                        key={image.id}
+                        src={`http://localhost:8000/storage/${image.file_path}`}
+                        alt={artwork.naziv}
+                        onClick={(e) => {
+                          e.stopPropagation(); // ne bi trebalo da selektuje artwork
+                          setPreviewImage(`http://localhost:8000/storage/${image.file_path}`);
+                        }}
+                        style={{ cursor: 'pointer' }}
+                      />
+                    ))}
                   </div>
                 )}
-                <div className="artwork-info">
-                  <h3>{artwork.naziv}</h3>
-                  <p className="artwork-category">
-                    {artwork.category?.naziv}
-                  </p>
-                </div>
+                <div className="category-tag">{artwork.category?.naziv}</div>
+                <h3>{artwork.naziv}</h3>
+                <p className="description">{artwork.opis}</p>
               </div>
             ))}
           </div>
@@ -127,39 +125,62 @@ const ExhibitionDetail: React.FC = () => {
       </div>
 
       {selectedArtwork && (
-        <div className="artwork-details">
-          <h2>Detaljи dela</h2>
-          <div className="details-content">
-            <div className="details-image">
-              {selectedArtwork.images && selectedArtwork.images.length > 0 && (
-                <img
-                  src={selectedArtwork.images[0].image_path}
-                  alt={selectedArtwork.naziv}
-                />
-              )}
-            </div>
-            <div className="details-info">
-              <h3>{selectedArtwork.naziv}</h3>
-              <p className="detail-author">
-                <strong>Autor:</strong> {selectedArtwork.user.name}
-              </p>
-              <p className="detail-category">
-                <strong>Kategorija:</strong> {selectedArtwork.category?.naziv}
-              </p>
-              <div className="detail-description">
-                <strong>Opis:</strong>
-                <p>{selectedArtwork.opis}</p>
-              </div>
-              <button
-                className="btn-view-artist"
-                onClick={() =>
-                  navigate(`/photographer/${selectedArtwork.user.id}`)
-                }
-              >
-                Pogledaj fotograerove druge radove →
-              </button>
-            </div>
+        <div className="your-artworks" style={{ marginTop: '40px' }}>
+          <h2>Artwork Details</h2>
+          <div className="artwork-images-preview">
+            {selectedArtwork.images.map((image) => (
+              <img
+                key={image.id}
+                src={`http://localhost:8000/storage/${image.file_path}`}
+                alt={selectedArtwork.naziv}
+                onClick={() => setPreviewImage(`http://localhost:8000/storage/${image.file_path}`)}
+                style={{ cursor: 'pointer' }}
+              />
+            ))}
           </div>
+          <h3>{selectedArtwork.naziv}</h3>
+          <p><strong>User:</strong> {selectedArtwork.user.name}</p>
+          <p><strong>Category:</strong> {selectedArtwork.category?.naziv}</p>
+          <p>{selectedArtwork.opis}</p>
+          <button
+            className="create-btn"
+            onClick={() => navigate(`/photographer/${selectedArtwork.user.id}`)}
+          >
+            Look at user's other works →
+          </button>
+        </div>
+      )}
+
+      {/* FULLSCREEN IMAGE PREVIEW */}
+      {previewImage && (
+        <div
+          className="image-preview-overlay"
+          onClick={() => setPreviewImage(null)}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(0,0,0,0.8)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 9999,
+            cursor: 'pointer'
+          }}
+        >
+          <img
+            src={previewImage}
+            alt="Preview"
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              maxWidth: '90%',
+              maxHeight: '90%',
+              borderRadius: '10px',
+              boxShadow: '0 0 20px rgba(0,0,0,0.5)',
+            }}
+          />
         </div>
       )}
     </div>

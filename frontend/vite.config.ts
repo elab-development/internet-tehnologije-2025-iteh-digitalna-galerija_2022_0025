@@ -2,13 +2,17 @@
 /// <reference types="vite/client"/>
 /// <reference types="jest"/>
 
-
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
   server: {
+    host: true, // ⬅ bitno za Docker
+    watch: {
+      usePolling: true, // ⬅ rešava problem sa Windows + volume
+      interval: 300
+    },
     proxy: {
       '/profile': 'http://127.0.0.1:8000',
       '/login': 'http://127.0.0.1:8000',
@@ -22,5 +26,4 @@ export default defineConfig({
     css: true,
     setupFiles: './src/test/setup.ts'
   }
-
-});   
+});

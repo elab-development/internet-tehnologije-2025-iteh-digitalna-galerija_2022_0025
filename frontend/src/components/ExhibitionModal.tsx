@@ -63,13 +63,13 @@ const ExhibitionModal: React.FC<ExhibitionModalProps> = ({
         )}
 
         <div className="exhibition-artworks">
-          <h3>Dela u izložbi ({exhibition.artworks.length})</h3>
+          <h3>Artworks in exhibition ({exhibition.artworks.length})</h3>
           <div className="artworks-preview-grid">
             {exhibition.artworks.map((artwork) => (
               <div key={artwork.id} className="artwork-preview-card">
                 {artwork.images && artwork.images.length > 0 && (
                   <img 
-                    src={`http://localhost:8000/storage/${artwork.images[0].file_path || artwork.images[0].image_path}`} 
+                    src={`http://localhost:8000/storage/${artwork.images[0].file_path}`} 
                     alt={artwork.naziv} 
                   />
                 )}
@@ -84,10 +84,10 @@ const ExhibitionModal: React.FC<ExhibitionModalProps> = ({
 
         <div className="modal-footer">
           <button className="btn-delete" onClick={handleDelete}>
-            Obriši izložbu
+            Delete Exhibition
           </button>
           <button className="btn-close" onClick={onClose}>
-            Zatvori
+            Close
           </button>
         </div>
       </div>

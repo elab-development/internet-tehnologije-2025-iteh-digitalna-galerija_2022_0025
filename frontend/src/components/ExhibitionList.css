@@ -1,0 +1,115 @@
+/* General container */
+.exhibitions-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  transition: all 0.3s ease;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .exhibitions-container {
+    color: #eee;
+    background-color: #121212;
+  }
+  .exhibition-card {
+    background-color: #1e1e1e;
+    color: #eee;
+    border: 1px solid #333;
+  }
+  .btn-visit {
+    background-color: #3399ff;
+    color: white;
+  }
+  .btn-visit:hover {
+    background-color: #007bff;
+  }
+}
+
+/* Headers */
+.exhibitions-container h2 {
+  text-align: center;
+  color: #007bff; /* always blue */
+  margin-bottom: 30px;
+}
+
+/* No exhibitions message */
+.no-exhibitions {
+  text-align: center;
+  font-style: italic;
+  color: #777;
+}
+
+/* Grid for exhibitions */
+.exhibitions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+/* Individual exhibition card */
+.exhibition-card {
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  padding: 20px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.exhibition-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+}
+
+/* Exhibition header */
+.exhibition-header h3 {
+  color: #007bff;
+  margin: 0 0 5px 0;
+}
+.exhibition-author {
+  font-size: 12px;
+  color: #555;
+}
+
+/* Exhibition description */
+.exhibition-description {
+  margin: 10px 0;
+  text-align: center; /* centered description */
+  color: #555;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* Exhibition info (artworks count + date) */
+.exhibition-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #777;
+  margin-bottom: 10px;
+}
+
+/* Visit button */
+.btn-visit {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  align-self: flex-end;
+  transition: background-color 0.2s;
+}
+.btn-visit:hover {
+  background-color: #0056b3;
+}
+
+/* Loading and error states */
+.loading, .error {
+  text-align: center;
+  margin: 40px 0;
+  color: #555;
+}

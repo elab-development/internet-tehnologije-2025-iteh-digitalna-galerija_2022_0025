@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../styles/ExhibitionList.css';
+import './ExhibitionList.css';
 
 interface Artwork {
   id: number;
@@ -43,16 +43,16 @@ const ExhibitionList: React.FC = () => {
     }
   };
 
-  if (loading) return <div className="loading">Učitavam izložbe...</div>;
+  if (loading) return <div className="loading">Loading exhibitions...</div>;
   if (error) return <div className="error">{error}</div>;
 
   return (
     <div className="exhibitions-container">
-      <h2>Sve izložbe</h2>
+      <h2>All exhibitions</h2>
 
       {exhibitions.length === 0 ? (
         <p className="no-exhibitions">
-          Nema dostupnih izložbi. Budite prvi koji će kreirati!
+          No exibitions available. Be the first to create one!
         </p>
       ) : (
         <div className="exhibitions-grid">
@@ -61,7 +61,7 @@ const ExhibitionList: React.FC = () => {
               <div className="exhibition-header">
                 <h3>{exhibition.name}</h3>
                 <span className="exhibition-author">
-                  od {exhibition.user.name}
+                  by {exhibition.user.name}
                 </span>
               </div>
 
@@ -69,7 +69,7 @@ const ExhibitionList: React.FC = () => {
 
               <div className="exhibition-info">
                 <span className="artworks-count">
-                  {exhibition.artworks.length} dela
+                  {exhibition.artworks.length} artworks
                 </span>
                 <span className="created-date">
                   {new Date(exhibition.created_at).toLocaleDateString('sr-RS')}
@@ -80,7 +80,7 @@ const ExhibitionList: React.FC = () => {
                 className="btn-visit"
                 onClick={() => navigate(`/exhibitions/${exhibition.id}`)}
               >
-                Poseti izložbu →
+                Visit exhibition →
               </button>
             </div>
           ))}

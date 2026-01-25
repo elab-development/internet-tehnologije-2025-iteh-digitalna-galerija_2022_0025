@@ -185,7 +185,7 @@ const Gallery: React.FC = () => {
       {activeTab === "exhibitions" && (
         <div className="exhibitions-section">
           {exhibitions.length === 0 ? (
-            <p className="no-data">Nema dostupnih izložbi.</p>
+            <p className="no-data">No exhibitions available.</p>
           ) : (
             <div className="exhibitions-grid">
               {exhibitions.map((exhibition) => (
@@ -208,19 +208,19 @@ const Gallery: React.FC = () => {
                   <div className="exhibition-info-card">
                     <h3>{exhibition.name}</h3>
                     <p className="exhibition-author">
-                      od {exhibition.user.name}
+                      by {exhibition.user.name}
                     </p>
                     <p className="exhibition-description">{exhibition.description}</p>
                     <div className="exhibition-meta">
                       <span className="artworks-count">
-                        {exhibition.artworks.length} dela
+                        {exhibition.artworks.length} artworks
                       </span>
                       <span className="exhibition-date">
                         {new Date(exhibition.created_at).toLocaleDateString('sr-RS')}
                       </span>
                     </div>
                     <button className="btn-visit-exhibition">
-                      Poseti izložbu →
+                      Visit exhibition →
                     </button>
                   </div>
                 </div>

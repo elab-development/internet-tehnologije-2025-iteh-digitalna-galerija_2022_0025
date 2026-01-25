@@ -258,12 +258,18 @@ body.dark-mode .pagination .MuiPaginationItem-root:hover {
   padding: 20px;
 }
 
+/* =========================
+   EXHIBITIONS GRID ONLY
+========================= */
 .exhibitions-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 25px;
-  margin-bottom: 40px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px; /* razmak između kartica */
+  max-width: 1200px;
+  margin: 0 auto; /* centriranje grid-a */
+  padding: 0 20px;
 }
+
 
 .exhibition-card-gallery {
   background: white;
@@ -333,20 +339,20 @@ body.dark-mode .pagination .MuiPaginationItem-root:hover {
 
 .exhibition-placeholder {
   width: 100%;
- 
-
+}
 .exhibition-info {
   padding: 20px;
   flex: 1;
   display: flex;
   flex-direction: column;
-} height: 100%;
+ height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 48px;
   background: linear-gradient(135deg, #f5f5f5, #e8e8e8);
 }
+
 
 .exhibition-info-card {
   padding: 20px;
@@ -466,3 +472,54 @@ body.dark-mode .pagination .MuiPaginationItem-root:hover {
     font-size: 14px;
   }
 }
+  /* =========================
+   EXHIBITIONS GRID - DARK MODE
+========================= */
+body.dark-mode .exhibitions-grid {
+  gap: 30px; /* isti gap kao u svetlom modu */
+}
+
+body.dark-mode .exhibition-card-gallery,
+body.dark-mode .gallery-exhibition-card {
+  background: #1e1e1e; /* tamna kartica */
+  box-shadow: 0 2px 12px rgba(255, 255, 255, 0.05);
+  color: #e0e0e0;
+  transition: all 0.3s ease;
+}
+
+body.dark-mode .exhibition-card-gallery:hover,
+body.dark-mode .gallery-exhibition-card:hover {
+  box-shadow: 0 12px 30px rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .exhibition-info-card h3 {
+  color: #90caf9; /* svetloplava za naslov */
+}
+
+body.dark-mode .exhibition-author {
+  color: #aaa;
+}
+
+body.dark-mode .exhibition-description {
+  color: #ccc;
+}
+
+
+
+body.dark-mode .exhibition-meta {
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  color: #999;
+}
+
+body.dark-mode .btn-visit-exhibition {
+  background: linear-gradient(135deg, #90caf9, #f48fb1); /* svetliji gradient */
+  color: #1e1e1e;
+}
+
+body.dark-mode .btn-visit-exhibition:hover {
+  box-shadow: 0 4px 12px rgba(144, 202, 249, 0.4);
+}
+
+
+
