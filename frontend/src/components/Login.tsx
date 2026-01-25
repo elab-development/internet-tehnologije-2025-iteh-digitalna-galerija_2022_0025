@@ -57,6 +57,7 @@ const Login = () => {
           setFormData({ name: '', email: '', password: '', password_confirmation: '' });
         } else {
           localStorage.setItem('auth_token', data.token);
+          localStorage.setItem('user_role', data.role || 'guest');
           window.dispatchEvent(new Event("authChange"));
           navigate('/profile');
         }

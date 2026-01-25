@@ -24,8 +24,16 @@
   font-size: 28px;
 }
 
-.logout-btn {
+.header-actions {
+  display: flex;
+  gap: 12px;
   margin-top: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.logout-btn {
   padding: 10px 30px;
   border: 2px solid #1c1c97;
   background: transparent;
@@ -39,6 +47,23 @@
 
 .logout-btn:hover {
   background: #1c1c97;
+  color: white;
+}
+
+.admin-btn {
+  padding: 10px 30px;
+  border: 2px solid #22c55e;
+  background: transparent;
+  color: #22c55e;
+  border-radius: 999px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+  font-size: 14px;
+}
+
+.admin-btn:hover {
+  background: #22c55e;
   color: white;
 }
 

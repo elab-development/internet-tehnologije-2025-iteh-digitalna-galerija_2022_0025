@@ -49,6 +49,27 @@
     width: 100%;
 }
 
+/* Admin link styles */
+.navbar-nav .nav-link.admin-link {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+.navbar-nav .nav-link.admin-link::after {
+    display: none;
+}
+
+.navbar-nav .nav-link.admin-link:hover {
+    background: linear-gradient(135deg, #16a34a, #15803d);
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
+}
+
+body.dark-mode .navbar-nav .nav-link.admin-link {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+}
+
 /* Dark mode styles */
 body.dark-mode .navbar-purple {
     

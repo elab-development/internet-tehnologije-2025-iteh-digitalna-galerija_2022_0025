@@ -51,10 +51,11 @@ class AuthController extends Controller
         // Kreiraj novi token
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        // Vrati token
+        // Vrati token i role
         return response()->json([
             'message' => 'Successfully logged in',
-            'token' => $token
+            'token' => $token,
+            'role' => $user->role
         ]);
     }
 

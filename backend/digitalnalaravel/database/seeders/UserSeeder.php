@@ -105,6 +105,12 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('sara987'),
                 'role' => 'guest',
             ],
+            [
+                'name' => 'Jana',
+                'email' => 'jana@gmail.com',
+                'password' => Hash::make('jana123'),
+                'role' => 'admin',
+            ],
         ];
 
         // Kreiraj samo korisnike koji već ne postoje

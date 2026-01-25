@@ -11,6 +11,7 @@ import Gallery from "./components/Gallery";
 import AboutUs from "./components/AboutUs";
 import PhotographerPage from "./components/PhotographerPage";
 import Profile from "./components/Profile";
+import AdminDashboard from "./components/AdminDashboard";
 import ExhibitionDetail from "./components/ExhibitionDetail";
 import './App.css';
 
@@ -52,6 +53,7 @@ const App: React.FC = () => {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/components/Gallery" element={<Gallery />} />
             <Route path="/components/AboutUs" element={<AboutUs />} />
             <Route path="/photographer/:username" element={<PhotographerPage />} />

@@ -7,6 +7,7 @@ use App\Http\Controllers\ImageController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ExhibitionController;
+use App\Http\Controllers\AdminController;
 
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
@@ -42,6 +43,8 @@ Route::middleware('auth:sanctum')->group(function () {
     
     Route::get('/user', [UserController::class, 'getUser']);
 
+    // Admin rute
+    Route::get('admin/statistics', [AdminController::class, 'getStatistics']);
     
 });
 
