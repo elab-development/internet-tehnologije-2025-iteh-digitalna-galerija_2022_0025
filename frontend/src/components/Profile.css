@@ -13,13 +13,13 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 40px 20px;
+  padding: 40px 20px 20px 20px;
   background: white;
   box-shadow: 0 2px 12px rgba(0,0,0,0.05);
 }
 
 .profile-header h2 {
-  margin: 0;
+  margin: 0 0 20px 0;
   color: #1c1c97;
   font-size: 28px;
 }
@@ -27,7 +27,9 @@
 .header-actions {
   display: flex;
   gap: 12px;
-  margin-top: 16px;
+  margin-top: 0;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
   align-items: center;
   flex-wrap: wrap;
   justify-content: center;

@@ -22,25 +22,28 @@ function AdminDashboard() {
 
   useEffect(() => {
     document.title = "Admin Dashboard";
+    
+    // Proverava prvo da li je korisnik admin
+    const token = localStorage.getItem("auth_token");
+    const userRole = localStorage.getItem("user_role");
+
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+
+    if (userRole !== "admin") {
+      navigate("/profile");
+      return;
+    }
+
     fetchStatistics();
-  }, []);
+  }, [navigate]);
 
   const fetchStatistics = async () => {
     try {
       setLoading(true);
       const token = localStorage.getItem("auth_token");
-      const userRole = localStorage.getItem("user_role");
-
-      // Provjera da li je korisnik admin
-      if (userRole !== "admin") {
-        navigate("/profile");
-        return;
-      }
-
-      if (!token) {
-        navigate("/login");
-        return;
-      }
 
       const res = await fetch("http://localhost:8000/api/admin/statistics", {
         headers: {
