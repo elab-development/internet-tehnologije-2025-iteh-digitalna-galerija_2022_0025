@@ -425,11 +425,21 @@ function Profile() {
       )}
 
       {/* EXHIBITION FORM MODAL */}
-      <ExhibitionForm
-        isOpen={showExhibitionForm}
-        onClose={() => setShowExhibitionForm(false)}
-        onSuccess={() => fetchUserExhibitions()}
-      />
+      {showExhibitionForm && (
+        <ExhibitionForm
+          isOpen={showExhibitionForm} // kontrola vidljivosti
+          onClose={() => setShowExhibitionForm(false)} // zatvaranje
+          onSuccess={() => {
+            setShowExhibitionForm(false); // zatvori formu
+            fetchUserExhibitions();       // osveži izložbe
+          }}
+        />
+      )}
+
+
+
+
+
 
       {/* EXHIBITION DETAIL MODAL */}
       {showExhibitionModal && selectedExhibition && (
