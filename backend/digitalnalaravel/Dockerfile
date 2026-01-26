@@ -13,7 +13,7 @@ COPY . .
 # Instalacija Composer-a
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# ⬇⬇ OVO JE BITNO
-RUN composer install --no-interaction --prefer-source
+
+RUN composer install 
 
 EXPOSE 8000

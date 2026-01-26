@@ -4,8 +4,7 @@ WORKDIR /app
 
 COPY package*.json ./
 
-# ⬇⬇ OVO MENJA npm install
-RUN npm ci
+RUN npm install
 
 COPY . .
 
