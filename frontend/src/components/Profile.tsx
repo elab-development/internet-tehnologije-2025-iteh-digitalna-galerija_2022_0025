@@ -63,7 +63,7 @@ function Profile() {
   const [exhibitions, setExhibitions] = useState<Exhibition[]>([]);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [isLoadingArtworks, setIsLoadingArtworks] = useState(false);
-  
+
   // State za Exhibition formu
   const [showExhibitionForm, setShowExhibitionForm] = useState(false);
   const [selectedExhibition, setSelectedExhibition] = useState<Exhibition | null>(null);
@@ -78,7 +78,7 @@ function Profile() {
     fetchCategories();
   }, [navigate]);
 
-  useEffect(() => { 
+  useEffect(() => {
     if (user) {
       fetchArtworks(user.id);
       fetchUserExhibitions();
@@ -90,13 +90,13 @@ function Profile() {
     const token = localStorage.getItem("auth_token");
     try {
       const res = await fetch("http://localhost:8000/api/categories", {
-        headers: { 
-          Authorization: `Bearer ${token}`, 
+        headers: {
+          Authorization: `Bearer ${token}`,
           Accept: "application/json",
           "Content-Type": "application/json"
         },
       });
-      
+
       if (res.ok) {
         const data = await res.json();
         console.log("Categories API response:", data); // Debug log
@@ -186,7 +186,7 @@ function Profile() {
     newPreviews.forEach(url => URL.revokeObjectURL(url));
     setShowForm(false);
     setEditingArtworkId(null);
-    setNaziv(""); setOpis(""); setCategoryId(""); 
+    setNaziv(""); setOpis(""); setCategoryId("");
     setNewFiles([]); setNewPreviews([]);
     setImagesToDelete([]); setCurrentImages([]);
   };
@@ -194,13 +194,13 @@ function Profile() {
   // POPRAVI handleSaveArtwork da proveri categoryId
   const handleSaveArtwork = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Validacija
     if (!categoryId) {
       setSubmitMsg("Please select a category");
       return;
     }
-    
+
     const token = localStorage.getItem("auth_token");
     if (!token) return;
 
@@ -258,7 +258,7 @@ function Profile() {
 
   const deleteExhibition = async (exhibitionId: number) => {
     const token = localStorage.getItem("auth_token");
-    if (!token || !window.confirm("Sigurni ste da želite da obrišete ovu izložbu?")) return;
+    if (!token) return;
 
     try {
       const res = await fetch(`http://localhost:8000/api/exhibitions/${exhibitionId}`, {
@@ -268,14 +268,15 @@ function Profile() {
 
       if (res.ok) {
         setSubmitMsg("Izložba je obrisana");
-        fetchUserExhibitions();
-        setSelectedExhibition(null);
+        fetchUserExhibitions();       // osveži listu izložbi
+        setSelectedExhibition(null);   // zatvori modal
         setTimeout(() => setSubmitMsg(""), 3000);
       }
     } catch (err) {
       console.error("Greška pri brisanju izložbe", err);
     }
   };
+
 
   return (
     <div className="profile-page">
@@ -323,7 +324,7 @@ function Profile() {
             <p>Loading your artworks...</p>
           </div>
         ) : artworks.length === 0 ? (
-          <p className="no-artworks-msg" style={{textAlign: 'center'}}>No artworks yet. Start creating!</p>
+          <p className="no-artworks-msg" style={{ textAlign: 'center' }}>No artworks yet. Start creating!</p>
         ) : (
           <div className="artwork-grid">
             {artworks.map((art) => (
@@ -331,21 +332,21 @@ function Profile() {
                 <h2>{art.naziv}</h2>
                 <p className="category-tag">{art.category?.name || art.category?.naziv}</p>
                 <p className="description">{art.opis}</p>
-                
+
                 <div className="artwork-images-preview">
                   {art.images?.map((img) => (
-                    <img 
-                      key={img.id} 
-                      src={`http://localhost:8000/storage/${img.file_path || img.image_path}`} 
-                      alt="art" 
+                    <img
+                      key={img.id}
+                      src={`http://localhost:8000/storage/${img.file_path || img.image_path}`}
+                      alt="art"
                       onClick={() => setPreviewImage(`http://localhost:8000/storage/${img.file_path || img.image_path}`)}
                     />
                   ))}
                 </div>
 
                 <div className="card-footer-actions">
-                    <button className="update-btn" onClick={() => startEdit(art)}>Edit artwork</button>
-                    <button className="delete-artwork-btn" onClick={() => deleteArtwork(art.id)}>Delete artwork</button>
+                  <button className="update-btn" onClick={() => startEdit(art)}>Edit artwork</button>
+                  <button className="delete-artwork-btn" onClick={() => deleteArtwork(art.id)}>Delete artwork</button>
                 </div>
               </div>
             ))}
@@ -359,7 +360,7 @@ function Profile() {
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <form className="artwork-form" onSubmit={handleSaveArtwork}>
               <h3>{editingArtworkId ? "Edit Artwork" : "New Artwork"}</h3>
-              
+
               <div className="input-group">
                 <input type="text" placeholder="Name of artwork" value={naziv} onChange={(e) => setNaziv(e.target.value)} required />
               </div>
@@ -369,12 +370,12 @@ function Profile() {
               </div>
 
               <div className="input-group">
-                <select 
-                  value={categoryId} 
+                <select
+                  value={categoryId}
                   onChange={(e) => {
                     console.log("Selected category ID:", e.target.value);
                     setCategoryId(Number(e.target.value));
-                  }} 
+                  }}
                   required
                 >
                   <option value="" disabled hidden>Select category</option>
@@ -387,13 +388,13 @@ function Profile() {
               </div>
 
               <div className="manage-images-section">
-                <label style={{fontWeight: 'bold', display: 'block', marginBottom: '10px'}}>Gallery Management:</label>
+                <label style={{ fontWeight: 'bold', display: 'block', marginBottom: '10px' }}>Gallery Management:</label>
                 <div className="edit-images-grid">
                   {currentImages.map(img => (
                     <div key={img.id} className={`edit-image-item ${imagesToDelete.includes(img.id) ? 'marked-delete' : ''}`}>
                       <img src={`http://localhost:8000/storage/${img.file_path || img.image_path}`} alt="existing" />
                       <button type="button" className="img-action-btn" onClick={() => {
-                          setImagesToDelete(prev => prev.includes(img.id) ? prev.filter(i => i !== img.id) : [...prev, img.id]);
+                        setImagesToDelete(prev => prev.includes(img.id) ? prev.filter(i => i !== img.id) : [...prev, img.id]);
                       }}>
                         {imagesToDelete.includes(img.id) ? "↺" : "✕"}
                       </button>
@@ -406,7 +407,7 @@ function Profile() {
                       <button type="button" className="img-action-btn" onClick={() => removeNewImage(index)}>✕</button>
                     </div>
                   ))}
-                  
+
                   <label className="add-image-placeholder">
                     <span>+</span>
                     <input type="file" multiple onChange={handleFileSelect} hidden />

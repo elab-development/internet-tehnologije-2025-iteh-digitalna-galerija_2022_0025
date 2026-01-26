@@ -17,7 +17,7 @@ Route::get('/categories', [CategoryController::class, 'index']);
 
 // Javno dostupne izložbe
 Route::get('exhibitions', [ExhibitionController::class, 'index']);
-Route::get('exhibitions/{id}', [ExhibitionController::class, 'show']);
+
 
 Route::middleware('auth:sanctum')->group(function () {
 
@@ -49,3 +49,4 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 
+Route::get('exhibitions/{id}', [ExhibitionController::class, 'show']);

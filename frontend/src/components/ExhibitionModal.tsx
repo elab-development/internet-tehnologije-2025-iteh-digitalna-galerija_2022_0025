@@ -86,9 +86,7 @@ const ExhibitionModal: React.FC<ExhibitionModalProps> = ({
           <button className="btn-delete" onClick={handleDelete}>
             Delete Exhibition
           </button>
-          <button className="btn-close" onClick={onClose}>
-            Close
-          </button>
+          
         </div>
       </div>
     </div>
