@@ -1,3 +1,6 @@
+/* =======================
+   LIGHT MODE STYLES
+   ======================= */
 .exhibition-modal-content {
   background: white;
   border-radius: 12px;
@@ -7,6 +10,7 @@
   max-height: 90vh;
   overflow-y: auto;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  color: #333;
 }
 
 .exhibition-description {
@@ -40,6 +44,7 @@
   overflow: hidden;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   transition: all 0.2s;
+  background: #fff;
 }
 
 .artwork-preview-card:hover {
@@ -112,6 +117,77 @@
   background-color: #e0e0e0;
 }
 
+/* =======================
+   DARK MODE STYLES
+   ======================= */
+body.dark-mode .exhibition-modal-content {
+  background: #1e1e1e;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+  color: #eee;
+}
+
+body.dark-mode .exhibition-description {
+  border-bottom: 1px solid #333;
+}
+
+body.dark-mode .exhibition-description p {
+  color: #ccc;
+}
+
+body.dark-mode .exhibition-artworks h3 {
+  color: #fff;
+}
+
+body.dark-mode .artwork-preview-card {
+  background: #2a2a2a;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+body.dark-mode .artwork-preview-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
+}
+
+body.dark-mode .artwork-preview-card img {
+  filter: brightness(0.95);
+}
+
+body.dark-mode .artwork-details {
+  background: #2a2a2a;
+}
+
+body.dark-mode .artwork-details h4 {
+  color: #fff;
+}
+
+body.dark-mode .artwork-details .category {
+  color: #aaa;
+}
+
+body.dark-mode .modal-footer {
+  border-top: 1px solid #333;
+}
+
+body.dark-mode .btn-delete {
+  background-color: #660000;
+  color: #fee;
+}
+
+body.dark-mode .btn-delete:hover {
+  background-color: #990000;
+}
+
+body.dark-mode .btn-close {
+  background-color: #333;
+  color: #eee;
+}
+
+body.dark-mode .btn-close:hover {
+  background-color: #444;
+}
+
+/* =======================
+   RESPONSIVE
+   ======================= */
 @media (max-width: 600px) {
   .exhibition-modal-content {
     width: 95%;
