@@ -84,7 +84,7 @@ const ExhibitionModal: React.FC<ExhibitionModalProps> = ({
 
         <div className="modal-footer">
           <button className="btn-delete" onClick={handleDelete}>
-            Delete Exhibition
+            Delete exhibition
           </button>
           
         </div>

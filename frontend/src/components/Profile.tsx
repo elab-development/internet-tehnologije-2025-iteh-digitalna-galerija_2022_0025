@@ -267,13 +267,13 @@ function Profile() {
       });
 
       if (res.ok) {
-        setSubmitMsg("Izložba je obrisana");
+        setSubmitMsg("Exibition deleted");
         fetchUserExhibitions();       // osveži listu izložbi
         setSelectedExhibition(null);   // zatvori modal
         setTimeout(() => setSubmitMsg(""), 3000);
       }
     } catch (err) {
-      console.error("Greška pri brisanju izložbe", err);
+      console.error("Error deleting exhibition", err);
     }
   };
 
