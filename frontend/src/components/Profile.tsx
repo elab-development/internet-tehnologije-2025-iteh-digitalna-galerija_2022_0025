@@ -72,12 +72,36 @@ function Profile() {
   const [showExhibitionModal, setShowExhibitionModal] = useState(false);
 
   // Inicijalno učitavanje
+
   useEffect(() => {
     document.title = "Profile";
-    const token = localStorage.getItem("auth_token");
-    if (!token) { navigate("/login"); return; }
-    fetchUser();
-    fetchCategories();
+    const checkAuth = async () => {
+      const token = localStorage.getItem("auth_token");
+      if (!token) {
+        navigate("/login");
+        return;
+      }
+      try {
+        const res = await fetch("http://localhost:8000/api/user", {
+          headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
+        });
+        if (res.ok) {
+          setUser(await res.json());
+          fetchCategories();
+        } else {
+          localStorage.removeItem("auth_token");
+          setUser(null);
+          window.dispatchEvent(new Event('authChange'));
+          navigate("/login");
+        }
+      } catch {
+        localStorage.removeItem("auth_token");
+        setUser(null);
+        window.dispatchEvent(new Event('authChange'));
+        navigate("/login");
+      }
+    };
+    checkAuth();
   }, [navigate]);
 
   useEffect(() => {
