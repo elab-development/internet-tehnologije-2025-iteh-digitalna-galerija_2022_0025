@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Gallery.css";
-import Pagination from "@mui/material/Pagination";
+import { Pagination } from "@mui/material";
 
 type Category = { id: number; name: string };
 type Image = { id: number; file_path: string };
@@ -34,6 +34,7 @@ const Gallery: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<"artworks" | "exhibitions">("artworks");
+  const [expandedArtworkId, setExpandedArtworkId] = useState<number | null>(null);
 
   const perPage = 6;
 
@@ -152,17 +153,38 @@ const Gallery: React.FC = () => {
                 <p className="category-tag">{art.category?.name}</p>
                 <p className="description">{art.opis}</p>
                 
-                <div className="artwork-images">
-                  {art.images?.map((img) => (
-                    <div key={img.id} className="image-with-artist">
-                      <img
-                        src={`http://localhost:8000/storage/${img.file_path}`}
-                        alt={art.naziv}
-                        onClick={() => setPreviewImage(`http://localhost:8000/storage/${img.file_path}`)}
-                      />
-                    </div>
-                  ))}
-                </div>
+               <div className="artwork-images">
+  {art.images?.slice(0, 4).map((img, index) => (
+    <div
+      key={img.id}
+      className="image-wrapper"
+    >
+      <img
+        src={`http://localhost:8000/storage/${img.file_path}`}
+        alt={art.naziv}
+        onClick={() => {
+          if (index === 3 && art.images && art.images.length > 4) {
+            setExpandedArtworkId(art.id);
+          } else {
+            setPreviewImage(
+              `http://localhost:8000/storage/${img.file_path}`
+            );
+          }
+        }}
+        className={
+          index === 3 && art.images && art.images.length > 4 ? "blurred" : ""
+        }
+      />
+
+      {index === 3 && art.images && art.images.length > 4 && (
+        <div className="overlay" onClick={() => setExpandedArtworkId(art.id)}>
+          +{art.images.length - 4}
+        </div>
+      )}
+    </div>
+  ))}
+</div>
+
                 <h3>{art.user?.name}</h3>
               </div>
             ))}
@@ -234,6 +256,39 @@ const Gallery: React.FC = () => {
       {previewImage && (
         <div className="image-preview-overlay" onClick={() => setPreviewImage(null)}>
           <img src={previewImage} alt="Full view" className="image-preview-full" />
+        </div>
+      )}
+
+      {/* EXPANDED IMAGES MODAL */}
+      {expandedArtworkId && (
+        <div
+          className="expanded-images-overlay"
+          onClick={() => setExpandedArtworkId(null)}
+        >
+          <div className="expanded-images-modal" onClick={(e) => e.stopPropagation()}>
+            <button
+              className="close-expanded-btn"
+              onClick={() => setExpandedArtworkId(null)}
+            >
+              ✕
+            </button>
+            <div className="expanded-images-grid">
+              {artworks
+                .find((art) => art.id === expandedArtworkId)
+                ?.images?.map((img) => (
+                  <img
+                    key={img.id}
+                    src={`http://localhost:8000/storage/${img.file_path}`}
+                    alt="Expanded view"
+                    onClick={() =>
+                      setPreviewImage(
+                        `http://localhost:8000/storage/${img.file_path}`
+                      )
+                    }
+                  />
+                ))}
+            </div>
+          </div>
         </div>
       )}
     </div>

@@ -118,10 +118,24 @@ h1 {
   grid-template-columns: repeat(2, 1fr);
   gap: 12px;
   width: 100%;
+  max-width: 100%;
+}
+
+.artwork-images .image-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 18px;
+}
+
+.artwork-images .image-wrapper:nth-child(n+5) {
+  display: none;
 }
 
 .artwork-images img {
   width: 100%;
+  height: 100%;
   aspect-ratio: 1 / 1;
   object-fit: contain;      /* Slika je cela, ne seče se */
   border-radius: 18px;      /* Zaobljeni uglovi */
@@ -129,6 +143,7 @@ h1 {
   border: 1px solid rgba(0,0,0,0.06); /* Skoro providna ivica */
   cursor: zoom-in;
   transition: transform 0.3s ease;
+  display: block;
 }
 
 .artwork-images img:hover {
@@ -136,12 +151,6 @@ h1 {
 }
 
 /* ARTIST NAME */
-.image-with-artist {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
 .artist-name {
   font-size: 13px;
   color: #666;
@@ -521,5 +530,137 @@ body.dark-mode .btn-visit-exhibition:hover {
   box-shadow: 0 4px 12px rgba(144, 202, 249, 0.4);
 }
 
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+}
+
+.img-wrapper {
+  position: relative;
+  height: 180px;
+  overflow: hidden;
+}
+
+.img-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  color: white;
+  font-size: 32px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  z-index: 10;
+}
+
+.overlay:hover {
+  background: rgba(0, 0, 0, 0.65);
+}
+
+/* BLURRED IMAGE EFFECT */
+.image-wrapper img.blurred {
+  filter: blur(8px) !important;
+}
+
+/* EXPANDED IMAGES MODAL */
+.expanded-images-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.expanded-images-modal {
+  position: relative;
+  background: white;
+  border-radius: 16px;
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 30px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.close-expanded-btn {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: #333;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 0.3s ease;
+}
+
+.close-expanded-btn:hover {
+  background: #f0f0f0;
+  color: #1c1c97;
+}
+
+.expanded-images-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.expanded-images-grid img {
+  width: 100%;
+  height: 200px;
+  object-fit: contain;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  cursor: zoom-in;
+  transition: transform 0.3s ease;
+}
+
+.expanded-images-grid img:hover {
+  transform: scale(1.05);
+}
+
+/* DARK MODE SUPPORT FOR EXPANDED MODAL */
+body.dark-mode .expanded-images-modal {
+  background: #1e1e1e;
+  color: #e0e0e0;
+}
+
+body.dark-mode .close-expanded-btn {
+  color: #e0e0e0;
+}
+
+body.dark-mode .close-expanded-btn:hover {
+  background: #333;
+  color: #007bff;
+}
+
+body.dark-mode .expanded-images-grid img {
+  border-color: rgba(255, 255, 255, 0.1);
+}
 
 

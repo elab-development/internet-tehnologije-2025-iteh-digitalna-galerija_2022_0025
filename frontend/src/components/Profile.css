@@ -1,3 +1,67 @@
+.image-preview-modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.preview-nav-btn {
+  background: rgba(0,0,0,0.5);
+  color: #fff;
+  border: none;
+  font-size: 2.5rem;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 2;
+  transition: background 0.2s;
+}
+.preview-nav-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+.preview-nav-btn.left { margin-right: 10px; }
+.preview-nav-btn.right { margin-left: 10px; }
+.artwork-preview-img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+  border-radius: 18px;
+  padding: 6px;
+  background: transparent;
+  border: 1px solid rgba(0,0,0,0.08);
+  cursor: pointer;
+  transition: transform 0.2s;
+  position: relative;
+}
+
+.artwork-preview-img.blurred-overlay {
+  filter: none;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.more-images-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  font-size: 2rem;
+  font-weight: bold;
+  padding: 0.5em 1.2em;
+  border-radius: 16px;
+  pointer-events: none;
+  user-select: none;
+  letter-spacing: 1px;
+}
 /* =========================
    GLOBAL
 ========================= */
@@ -448,6 +512,12 @@
   padding: 14px;
   border-radius: 14px;
   cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cancel-btn:hover {
+  background: #555;
+  transform: translateY(-2px);
 }
 
 .save-btn {
@@ -455,9 +525,17 @@
   background: #1c1c97;
   color: white;
   border: none;
+  padding: 14px;
   border-radius: 14px;
   font-weight: bold;
   cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.save-btn:hover {
+  background: #14147a;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(28, 28, 151, 0.3);
 }
 
 /* =========================

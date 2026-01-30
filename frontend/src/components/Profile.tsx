@@ -47,7 +47,7 @@ function Profile() {
   const [editingArtworkId, setEditingArtworkId] = useState<number | null>(null);
   const [naziv, setNaziv] = useState("");
   const [opis, setOpis] = useState("");
-  const [categoryId, setCategoryId] = useState<number | "">("");
+  const [categoryId, setCategoryId] = useState<string>("");
 
   // State za slike
   const [newFiles, setNewFiles] = useState<File[]>([]);
@@ -62,6 +62,8 @@ function Profile() {
   const [artworks, setArtworks] = useState<Artwork[]>([]);
   const [exhibitions, setExhibitions] = useState<Exhibition[]>([]);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [previewImages, setPreviewImages] = useState<string[]>([]);
+  const [previewIndex, setPreviewIndex] = useState<number>(0);
   const [isLoadingArtworks, setIsLoadingArtworks] = useState(false);
 
   // State za Exhibition formu
@@ -174,7 +176,7 @@ function Profile() {
     setEditingArtworkId(art.id);
     setNaziv(art.naziv);
     setOpis(art.opis);
-    setCategoryId(art.category?.id || "");
+    setCategoryId(art.category?.id ? String(art.category.id) : "");
     setCurrentImages(art.images || []);
     setImagesToDelete([]);
     setNewFiles([]);
@@ -334,14 +336,43 @@ function Profile() {
                 <p className="description">{art.opis}</p>
 
                 <div className="artwork-images-preview">
-                  {art.images?.map((img) => (
-                    <img
-                      key={img.id}
-                      src={`http://localhost:8000/storage/${img.file_path || img.image_path}`}
-                      alt="art"
-                      onClick={() => setPreviewImage(`http://localhost:8000/storage/${img.file_path || img.image_path}`)}
-                    />
-                  ))}
+                  {art.images && art.images.length > 0 && (
+                    <>
+                      {art.images.slice(0, 3).map((img, idx) => (
+                        <img
+                          key={img.id}
+                          src={`http://localhost:8000/storage/${img.file_path || img.image_path}`}
+                          alt="art"
+                          className="artwork-preview-img"
+                          onClick={() => {
+                            setPreviewImages(art.images.map(i => `http://localhost:8000/storage/${i.file_path || i.image_path}`));
+                            setPreviewIndex(idx);
+                            setPreviewImage(`http://localhost:8000/storage/${img.file_path || img.image_path}`);
+                          }}
+                        />
+                      ))}
+                      {art.images.length > 3 && (
+                        <div
+                          className="artwork-preview-img blurred-overlay"
+                          onClick={() => {
+                            setPreviewImages(art.images.map(i => `http://localhost:8000/storage/${i.file_path || i.image_path}`));
+                            setPreviewIndex(3);
+                            setPreviewImage(`http://localhost:8000/storage/${art.images[3].file_path || art.images[3].image_path}`);
+                          }}
+                          style={{ position: 'relative', cursor: 'pointer' }}
+                        >
+                          <img
+                            src={`http://localhost:8000/storage/${art.images[3].file_path || art.images[3].image_path}`}
+                            alt="art"
+                            style={{ filter: 'blur(6px)', width: '100%', height: '100%', borderRadius: '18px' }}
+                          />
+                          <span className="more-images-overlay">
+                            +{art.images.length - 3}
+                          </span>
+                        </div>
+                      )}
+                    </>
+                  )}
                 </div>
 
                 <div className="card-footer-actions">
@@ -374,7 +405,7 @@ function Profile() {
                   value={categoryId}
                   onChange={(e) => {
                     console.log("Selected category ID:", e.target.value);
-                    setCategoryId(Number(e.target.value));
+                    setCategoryId(e.target.value);
                   }}
                   required
                 >
@@ -456,13 +487,16 @@ function Profile() {
 
       {/* FULLSCREEN PREVIEW */}
       {previewImage && (
-        <div className="image-preview-overlay" onClick={() => setPreviewImage(null)}>
-          <img
-            src={previewImage}
-            alt="Preview"
-            className="image-preview-full"
-            onClick={(e) => e.stopPropagation()}
-          />
+        <div className="image-preview-overlay" onClick={() => { setPreviewImage(null); setPreviewImages([]); }}>
+          <div className="image-preview-modal" onClick={e => e.stopPropagation()}>
+            <button className="preview-nav-btn left" onClick={() => setPreviewIndex((previewIndex - 1 + previewImages.length) % previewImages.length)} disabled={previewImages.length < 2}>&lt;</button>
+            <img
+              src={previewImages[previewIndex]}
+              alt="Preview"
+              className="image-preview-full"
+            />
+            <button className="preview-nav-btn right" onClick={() => setPreviewIndex((previewIndex + 1) % previewImages.length)} disabled={previewImages.length < 2}>&gt;</button>
+          </div>
         </div>
       )}
     </div>

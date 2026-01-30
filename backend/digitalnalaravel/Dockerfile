@@ -6,6 +6,11 @@ RUN apt-get update && apt-get install -y \
     netcat-openbsd \
     && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
+# Uklanjanje ogranicenja za veličinu uploadovanja
+RUN echo "upload_max_filesize = 0" >> /usr/local/etc/php/conf.d/uploads.ini && \
+    echo "post_max_size = 0" >> /usr/local/etc/php/conf.d/uploads.ini && \
+    echo "memory_limit = -1" >> /usr/local/etc/php/conf.d/uploads.ini
+
 WORKDIR /var/www
 
 COPY . .
