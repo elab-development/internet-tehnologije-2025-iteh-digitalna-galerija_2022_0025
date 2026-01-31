@@ -56,10 +56,10 @@ function AdminDashboard() {
 
       if (!res.ok) {
         if (res.status === 403) {
-          setError("Nemate pristup administrativnoj paneli");
+          setError("You do not have access to the admin panel");
           navigate("/profile");
         } else {
-          setError("Greška pri učitavanju statistike");
+          setError("Error loading statistics");
         }
         return;
       }
@@ -67,7 +67,7 @@ function AdminDashboard() {
       const data = await res.json();
       setStats(data);
     } catch (err) {
-      setError("Greška pri komunikaciji sa serverom");
+      setError("Error communicating with the server");
       console.error(err);
     } finally {
       setLoading(false);
@@ -80,16 +80,16 @@ function AdminDashboard() {
         <div className="dashboard-header">
           <h1>Admin Panel</h1>
           <p className="timestamp">
-            Ažurirano: {new Date(stats.timestamp).toLocaleString("sr-RS")}
+            Updated: {new Date(stats.timestamp).toLocaleString("en-US")}
           </p>
         </div>
 
-      {/* Glavne statistike */}
+      {/* Main statistics */}
       <section className="stats-grid">
         <div className="stat-card">
           <div className="stat-icon">👥</div>
           <div className="stat-content">
-            <h3>Ukupno korisnika</h3>
+            <h3>Total users</h3>
             <p className="stat-number">{stats.totalUsers}</p>
           </div>
         </div>
@@ -97,7 +97,7 @@ function AdminDashboard() {
         <div className="stat-card">
           <div className="stat-icon">⚙️</div>
           <div className="stat-content">
-            <h3>Administratori</h3>
+            <h3>Administrators</h3>
             <p className="stat-number">{stats.adminUsers}</p>
           </div>
         </div>
@@ -105,7 +105,7 @@ function AdminDashboard() {
         <div className="stat-card">
           <div className="stat-icon">🎨</div>
           <div className="stat-content">
-            <h3>Ukupno dela</h3>
+            <h3>Total artworks</h3>
             <p className="stat-number">{stats.totalArtworks}</p>
           </div>
         </div>
@@ -113,7 +113,7 @@ function AdminDashboard() {
         <div className="stat-card">
           <div className="stat-icon">🖼️</div>
           <div className="stat-content">
-            <h3>Ukupno slika</h3>
+            <h3>Total images</h3>
             <p className="stat-number">{stats.totalImages}</p>
           </div>
         </div>
@@ -121,17 +121,17 @@ function AdminDashboard() {
         <div className="stat-card">
           <div className="stat-icon">🎭</div>
           <div className="stat-content">
-            <h3>Gostujući korisnici</h3>
+            <h3>Guest users</h3>
             <p className="stat-number">{stats.guestUsers}</p>
           </div>
         </div>
       </section>
 
-      {/* Dva reda sa detaljima */}
+      {/* Two rows with details */}
       <div className="dashboard-row">
-        {/* Top kategorije */}
+        {/* Top categories */}
         <section className="dashboard-section">
-          <h2>🏆 Najpopularnije kategorije</h2>
+          <h2>🏆 Most popular categories</h2>
           <div className="category-list">
             {stats.topCategories && stats.topCategories.length > 0 ? (
               stats.topCategories.map((cat, idx) => (
@@ -152,18 +152,18 @@ function AdminDashboard() {
                       ></div>
                     </div>
                   </div>
-                  <p className="category-count">{cat.count} dela</p>
+                  <p className="category-count">{cat.count} artworks</p>
                 </div>
               ))
             ) : (
-              <p className="no-data">Nema kategorija</p>
+              <p className="no-data">No categories</p>
             )}
           </div>
         </section>
 
-        {/* Top umetnici */}
+        {/* Top artists */}
         <section className="dashboard-section">
-          <h2>⭐ Umetnici sa najvećim brojem dela</h2>
+          <h2>⭐ Artists with the most artworks</h2>
           <div className="artists-list">
             {stats.topArtists && stats.topArtists.length > 0 ? (
               stats.topArtists.map((artist, idx) => (
@@ -172,25 +172,25 @@ function AdminDashboard() {
                   <div className="artist-info">
                     <p className="artist-name">{artist.name}</p>
                     <p className="artist-count">
-                      {artist.artworks_count} dela
+                      {artist.artworks_count} artworks
                     </p>
                   </div>
                 </div>
               ))
             ) : (
-              <p className="no-data">Nema umetnika</p>
+              <p className="no-data">No artists</p>
             )}
           </div>
         </section>
       </div>
 
-      {/* Sve kategorije sa brojem dela */}
+      {/* All categories with artwork count */}
       <section className="dashboard-section full-width">
-        <h2>📊 Detalji po kategorijama</h2>
+        <h2>📊 Category details</h2>
         <div className="categories-table">
           <div className="table-header">
-            <p>Kategorija</p>
-            <p>Broj dela</p>
+            <p>Category</p>
+            <p>Number of artworks</p>
           </div>
           {stats.artworksByCategory && stats.artworksByCategory.length > 0 ? (
             stats.artworksByCategory.map((cat) => (
@@ -200,7 +200,7 @@ function AdminDashboard() {
               </div>
             ))
           ) : (
-            <p className="no-data">Nema kategorija</p>
+            <p className="no-data">No categories</p>
           )}
         </div>
       </section>
@@ -208,12 +208,12 @@ function AdminDashboard() {
   );
   }
 
-  // Ako se učitava ili nema greške
+  // If loading or no error
   return (
     <div className="admin-dashboard">
       <div className="loading-spinner-container">
         <div className="loading-spinner"></div>
-        <p>Učitavanje...</p>
+        <p>Loading...</p>
       </div>
     </div>
   );
