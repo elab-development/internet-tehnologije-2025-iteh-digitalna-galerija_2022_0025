@@ -1,7 +1,9 @@
+
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import homeImage from '../images/home_transparent_strict.png'; 
 import './Home.css';
+import WeatherWidget from "./WeatherWidget";
 
 const Home: React.FC = () => { 
     const navigate = useNavigate();
@@ -23,6 +25,10 @@ const Home: React.FC = () => {
                     </button>
                 </div>
                 <img src={homeImage} alt="Home" className="home-image" /> 
+            </div>
+            {/* Weather widget fixed at bottom right */}
+            <div className="weather-widget-fixed">
+                <WeatherWidget />
             </div>
         </div>
     );

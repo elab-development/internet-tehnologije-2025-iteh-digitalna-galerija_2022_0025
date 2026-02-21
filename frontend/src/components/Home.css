@@ -1,3 +1,10 @@
+/* Weather widget fixed position */
+.weather-widget-fixed {
+  position: fixed;
+  right: 32px;
+  bottom: 24px;
+  z-index: 100;
+}
 /* =========================
    LAYOUT (Tvoj stil)
 ========================= */

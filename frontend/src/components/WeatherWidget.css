@@ -1,0 +1,37 @@
+.weather-widget {
+  background: none;
+  border-radius: 0;
+  padding: 0.3rem 0.7rem;
+  margin: 0.2rem 0;
+  box-shadow: none;
+  max-width: 200px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  color: #222;
+}
+.weather-widget h4 {
+  margin: 0 0 0.2rem 0;
+  font-size: 0.98rem;
+  color: #222;
+  font-weight: 500;
+}
+.weather-main {
+  display: flex;
+  align-items: center;
+}
+.weather-main img {
+  width: 36px;
+  height: 36px;
+  margin-right: 0.5rem;
+}
+.weather-temp {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #222;
+  display: block;
+}
+.weather-desc {
+  font-size: 0.92rem;
+  color: #444;
+  text-transform: capitalize;
+}
