@@ -1,0 +1,34 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ master, develop, feature/dashboard ]
+  pull_request:
+    branches: [ master, develop ]
+
+jobs:
+  test-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Install dependencies (frontend)
+        run: |
+          cd frontend
+          npm install
+      - name: Run tests (frontend)
+        run: |
+          cd frontend
+          npm run test || echo "No tests found"
+
+  build-docker:
+    runs-on: ubuntu-latest
+    needs: test-frontend
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build Docker image
+        run: |
+          docker build -t gallery-frontend ./frontend

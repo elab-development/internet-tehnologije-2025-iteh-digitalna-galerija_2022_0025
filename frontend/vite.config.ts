@@ -9,6 +9,8 @@ export default defineConfig({
   plugins: [react()],
   server: {
     host: true, // ⬅ bitno za Docker
+    port: 5173, // Fiksirani port
+    strictPort: true, // Ako je port zauzet, baci grešku
     watch: {
       usePolling: true, // ⬅ rešava problem sa Windows + volume
       interval: 300
