@@ -1,3 +1,4 @@
+import SalesChart from './SalesChart';
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./AdminDashboard.css";
@@ -127,6 +128,10 @@ function AdminDashboard() {
         </div>
       </section>
 
+      {/* Chart vizualizacija */}
+      <section className="dashboard-section full-width" style={{ maxWidth: 700, margin: '40px auto' }}>
+        <SalesChart />
+      </section>
       {/* Two rows with details */}
       <div className="dashboard-row">
         {/* Top categories */}
