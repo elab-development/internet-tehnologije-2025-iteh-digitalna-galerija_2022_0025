@@ -31,5 +31,4 @@ jobs:
       - uses: actions/checkout@v3
       - name: Build Docker image
         run: |
-          docker build -t gallery-app ./backend/digitalnalaravel
           docker build -t gallery-frontend ./frontend
