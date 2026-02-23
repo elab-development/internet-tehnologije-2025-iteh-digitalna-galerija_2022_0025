@@ -18,6 +18,7 @@
     "noEmit": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
+    "noEmitOnError": false,
     "jsx": "react-jsx",
 
     "strict": true,
