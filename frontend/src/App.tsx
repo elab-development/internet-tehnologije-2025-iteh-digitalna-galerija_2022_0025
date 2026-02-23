@@ -34,9 +34,7 @@ const App: React.FC = () => {
 
   const navBarProps: NavBarPropsI = {
     imageSrcPath: imagePath,
-    navItems: navItems,
-    handleMenuToggle: () => {},
-    isMenuOpen: false
+    navItems: navItems
   };
 
   return (
