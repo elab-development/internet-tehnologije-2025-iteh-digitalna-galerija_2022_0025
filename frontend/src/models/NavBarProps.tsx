@@ -12,8 +12,6 @@ export class NavBarProps {
 export interface NavBarPropsI {
     imageSrcPath: string;
     navItems: { name: string; path: string }[];
-    handleMenuToggle: () => void;
-    isMenuOpen: boolean; 
-  }
+}
   
   
