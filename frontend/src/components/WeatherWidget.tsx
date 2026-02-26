@@ -12,7 +12,7 @@ interface WeatherData {
   }[];
 }
 
-const API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY;
+const API_KEY = "8df3ba4d3e5e3d877745f03ecb23ed64";
 const CITY = "Belgrade";
 
 const WeatherWidget: React.FC = () => {

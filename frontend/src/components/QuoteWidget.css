@@ -1,0 +1,28 @@
+.quote-widget {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 10;
+}
+
+.quote-bubble {
+  background: #f5f5f5;
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 16px 24px;
+  max-width: 260px;
+  font-size: 1rem;
+  color: #444;
+  opacity: 0.85;
+  transition: opacity 0.2s;
+}
+
+.quote-text {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.quote-author {
+  font-size: 0.9em;
+  color: #888;
+}

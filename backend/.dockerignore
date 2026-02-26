@@ -1,12 +1,11 @@
-
+vendor
 node_modules
-build
-dist
+storage
+.env
 .git
 *.log
-.env
-coverage
+.DS_Store
+.idea
 .vscode
 Dockerfile
 README.md
-.env.local

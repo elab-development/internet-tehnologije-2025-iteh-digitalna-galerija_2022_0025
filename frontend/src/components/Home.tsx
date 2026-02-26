@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import homeImage from '../images/home_transparent_strict.png'; 
 import './Home.css';
 import WeatherWidget from "./WeatherWidget";
+import QuoteWidget from "./QuoteWidget";
 
 const Home: React.FC = () => { 
     const navigate = useNavigate();
@@ -30,6 +31,8 @@ const Home: React.FC = () => {
             <div className="weather-widget-fixed">
                 <WeatherWidget />
             </div>
+            {/* Quote widget fixed at bottom left */}
+            <QuoteWidget />
         </div>
     );
 };

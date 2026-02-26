@@ -11,14 +11,23 @@ RUN echo "upload_max_filesize = 0" >> /usr/local/etc/php/conf.d/uploads.ini && \
     echo "post_max_size = 0" >> /usr/local/etc/php/conf.d/uploads.ini && \
     echo "memory_limit = -1" >> /usr/local/etc/php/conf.d/uploads.ini
 
+
 WORKDIR /var/www
 
-COPY . .
+
+# Prvo kopiraj samo composer fajlove radi keširanja vendor foldera
+COPY composer.json composer.lock ./
 
 # Instalacija Composer-a
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
+# Instaliraj zavisnosti bez pokretanja skripti (jer artisan još ne postoji)
+RUN composer install --no-scripts --no-autoloader
 
-RUN composer install 
+# Sada kopiraj ceo projekat
+COPY . .
+
+# Sada generiši autoload fajlove i pokreni skripte
+RUN composer install
 
 EXPOSE 8000
