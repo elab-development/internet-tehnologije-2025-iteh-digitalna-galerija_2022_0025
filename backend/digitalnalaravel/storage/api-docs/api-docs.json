@@ -1,0 +1,678 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Digitalna galerija API",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000",
+            "description": "Local server"
+        }
+    ],
+    "paths": {
+        "/api/health": {
+            "get": {
+                "tags": [
+                    "System"
+                ],
+                "summary": "Health check",
+                "operationId": "f55bd3481fce0c2668d768f679fc876d",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/register": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Register new user",
+                "operationId": "396fb3b59ef6b7924f1a825adeab3953",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User registered"
+                    },
+                    "400": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "User login",
+                "operationId": "50e9c1f93ee97cda36df44a3fe480b22",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Token returned"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                }
+            }
+        },
+        "/api/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "User logout",
+                "operationId": "eb570c08b3ba42b37689d42cc5c4f306",
+                "responses": {
+                    "200": {
+                        "description": "Logged out"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/artworks": {
+            "get": {
+                "tags": [
+                    "Artworks"
+                ],
+                "summary": "List all artworks",
+                "operationId": "8a6801295b23daf2edce029fc2c480bf",
+                "responses": {
+                    "200": {
+                        "description": "List returned"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Artworks"
+                ],
+                "summary": "Create artwork",
+                "operationId": "8c90204ec19c5dc8e4bac64eb1ab5316",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Created"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/artworks/user": {
+            "get": {
+                "tags": [
+                    "Artworks"
+                ],
+                "summary": "List artworks for user",
+                "operationId": "5cbd7faeac6241b95105621d69d102c0",
+                "responses": {
+                    "200": {
+                        "description": "User artworks"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/artworks/{id}": {
+            "get": {
+                "tags": [
+                    "Artworks"
+                ],
+                "summary": "Get single artwork",
+                "operationId": "317cf683b68f06d8befb25455bf61635",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Artwork data"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/api/artworks/{artwork}": {
+            "put": {
+                "tags": [
+                    "Artworks"
+                ],
+                "summary": "Update artwork",
+                "operationId": "6d3500b7095a17f4a865e069945f14ad",
+                "parameters": [
+                    {
+                        "name": "artwork",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Updated"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Artworks"
+                ],
+                "summary": "Delete artwork",
+                "operationId": "ede4861e14d058b418de59cce2fface1",
+                "parameters": [
+                    {
+                        "name": "artwork",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Deleted"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/categories": {
+            "get": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "List categories",
+                "operationId": "b9af23edd3ef9467804934034f4d6993",
+                "responses": {
+                    "200": {
+                        "description": "List returned"
+                    }
+                }
+            }
+        },
+        "/api/exhibitions": {
+            "get": {
+                "tags": [
+                    "Exhibitions"
+                ],
+                "summary": "Public exhibitions",
+                "operationId": "66a53aca73512fa8f2b57d96af3d3553",
+                "responses": {
+                    "200": {
+                        "description": "List returned"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Exhibitions"
+                ],
+                "summary": "Create exhibition",
+                "operationId": "a0767b51a3d81918720db56a48b99e9b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Created"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/exhibitions/user": {
+            "get": {
+                "tags": [
+                    "Exhibitions"
+                ],
+                "summary": "User exhibitions",
+                "operationId": "813dc24b6529bb6c33fd85084827c84e",
+                "responses": {
+                    "200": {
+                        "description": "List returned"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/exhibitions/{exhibition}": {
+            "put": {
+                "tags": [
+                    "Exhibitions"
+                ],
+                "summary": "Update exhibition",
+                "operationId": "444c6e7b8bad2d64a09659ac99037edc",
+                "parameters": [
+                    {
+                        "name": "exhibition",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Updated"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Exhibitions"
+                ],
+                "summary": "Delete exhibition",
+                "operationId": "3ed080e73cf04e9890c24a640df8cabe",
+                "parameters": [
+                    {
+                        "name": "exhibition",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Deleted"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/exhibitions/{id}": {
+            "get": {
+                "tags": [
+                    "Exhibitions"
+                ],
+                "summary": "Get single exhibition",
+                "operationId": "a53b799d3ca8ea1c034fce6327133713",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Exhibition data"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/api/images/upload": {
+            "post": {
+                "tags": [
+                    "Images"
+                ],
+                "summary": "Upload image",
+                "operationId": "874255abd526dcb4b17e0b16c4f95386",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "file": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Uploaded"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/images": {
+            "get": {
+                "tags": [
+                    "Images"
+                ],
+                "summary": "List images",
+                "operationId": "a0f6561aecba75cb87326f3e7c50cf2e",
+                "responses": {
+                    "200": {
+                        "description": "List returned"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/images/{id}": {
+            "delete": {
+                "tags": [
+                    "Images"
+                ],
+                "summary": "Delete image",
+                "operationId": "48e5f1eea7cc5727759de145d40c7d64",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Deleted"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/images/external": {
+            "get": {
+                "tags": [
+                    "Images"
+                ],
+                "summary": "Fetch external images",
+                "operationId": "02e0009f0567086379d2db454ca3b533",
+                "responses": {
+                    "200": {
+                        "description": "Fetched"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/user": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get current user",
+                "operationId": "c79f5c2d964439a05cc9b8c8106805ce",
+                "responses": {
+                    "200": {
+                        "description": "User data"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/statistics": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Admin statistics",
+                "operationId": "ccd1494c6b5c6cef3702c861f94090ed",
+                "responses": {
+                    "200": {
+                        "description": "Stats"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "System",
+            "description": "System"
+        },
+        {
+            "name": "Auth",
+            "description": "Auth"
+        },
+        {
+            "name": "Artworks",
+            "description": "Artworks"
+        },
+        {
+            "name": "Categories",
+            "description": "Categories"
+        },
+        {
+            "name": "Exhibitions",
+            "description": "Exhibitions"
+        },
+        {
+            "name": "Images",
+            "description": "Images"
+        },
+        {
+            "name": "Users",
+            "description": "Users"
+        },
+        {
+            "name": "Admin",
+            "description": "Admin"
+        }
+    ]
+}
