@@ -4,30 +4,43 @@ import { Chart, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend }
 
 Chart.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-const data = {
-  labels: ['Januar', 'Februar', 'Mart', 'April', 'Maj', 'Jun'],
-  datasets: [
-    {
-      label: 'Prodaja po mesecima',
-      data: [120, 150, 180, 90, 200, 170],
-      backgroundColor: 'rgba(54, 162, 235, 0.5)',
-    },
-  ],
+type Props = {
+  artworksByCategory: Array<{ name: string; count: number }>;
 };
 
-const options = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: 'top',
-    },
-    title: {
-      display: true,
-      text: 'Analiza prodaje po mesecima',
-    },
-  },
-};
+export default function SalesChart({ artworksByCategory }: Props) {
+  const data = {
+    labels: artworksByCategory.map(cat => cat.name),
+    datasets: [
+      {
+        label: 'Broj umetničkih dela',
+        data: artworksByCategory.map(cat => cat.count),
+        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+      },
+    ],
+  };
 
-export default function SalesChart() {
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: { position: 'top' },
+      title: {
+        display: true,
+        text: 'Broj umetničkih dela po kategorijama',
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          stepSize: 5,
+          callback: function(value: number) {
+            return Number.isInteger(value) ? value : '';
+          }
+        }
+      }
+    }
+  };
+
   return <Bar data={data} options={options} />;
 }

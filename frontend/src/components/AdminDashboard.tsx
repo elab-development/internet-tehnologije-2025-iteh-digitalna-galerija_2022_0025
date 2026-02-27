@@ -130,7 +130,7 @@ function AdminDashboard() {
 
       {/* Chart vizualizacija */}
       <section className="dashboard-section full-width" style={{ maxWidth: 700, margin: '40px auto' }}>
-        <SalesChart />
+        <SalesChart artworksByCategory={stats.artworksByCategory} />
       </section>
       {/* Two rows with details */}
       <div className="dashboard-row">
